@@ -9,6 +9,8 @@ crossref:
   fig-labels: arabic
   tbl-labels: arabic
 editor: visual
+embed-resources: true
+self-contained-math: true
 ---
 
 ```{r}
@@ -631,13 +633,13 @@ x <- unknown_reg_final.ts.fit |>
 
 x$x
 
-tmp_mdl <- stats::arima(
-  unknown_reg.ts$x,
-  order = c(2,1,1),
-  xreg = cbind(z1, z2, z3, z4, z5, z6)
-)
+# tmp_mdl <- stats::arima(
+#   unknown_reg.ts$x,
+#   order = c(2,1,1),
+#   xreg = cbind(z1, z2, z3, z4, z5, z6)
+# )
 ```
 
 ```{r}
-stats::predict(tmp_mdl, n.ahead = 2, newxreg = cbind(z1_f, z2_f, z3_f, z4_f, z5_f, z6_f))
+# stats::predict(tmp_mdl, n.ahead = 2, newxreg = cbind(z1_f, z2_f, z3_f, z4_f, z5_f, z6_f))
 ```

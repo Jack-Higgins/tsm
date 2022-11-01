@@ -118,6 +118,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   </ul></li>
   <li><a href="#question-d---spectral-analysis" id="toc-question-d---spectral-analysis" class="nav-link" data-scroll-target="#question-d---spectral-analysis">Question (d) - Spectral analysis</a></li>
   <li><a href="#question-e---fitting-a-regarima-model" id="toc-question-e---fitting-a-regarima-model" class="nav-link" data-scroll-target="#question-e---fitting-a-regarima-model">Question (e) - Fitting a RegARIMA model</a></li>
+  <li><a href="#question-f---deriving-forecast-equations" id="toc-question-f---deriving-forecast-equations" class="nav-link" data-scroll-target="#question-f---deriving-forecast-equations">Question (f) - Deriving forecast equations</a></li>
+  <li><a href="#question-g---calculating-forecasts" id="toc-question-g---calculating-forecasts" class="nav-link" data-scroll-target="#question-g---calculating-forecasts">Question (g) - Calculating forecasts</a></li>
   </ul>
 </nav>
 </div>
@@ -347,7 +349,7 @@ NULL model</code></pre>
 <span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>      fabletools<span class="sc">::</span><span class="fu">model</span>(fable<span class="sc">::</span><span class="fu">ARIMA</span>(x <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> <span class="fu">pdq</span>(p, <span class="dv">1</span>, q) <span class="sc">+</span> <span class="fu">PDQ</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>))) <span class="sc">|&gt;</span> </span>
 <span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>      fabletools<span class="sc">::</span><span class="fu">glance</span>()</span>
 <span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>  })</span>
-<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">nrow</span>(model_results) <span class="sc">&gt;</span> <span class="dv">0</span>) { <span class="co"># Only include models that returned non-empty</span></span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">nrow</span>(model_results) <span class="sc">&gt;</span> <span class="dv">0</span>) { <span class="co"># Only include non-empty results</span></span>
 <span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>    model_results <span class="ot">&lt;-</span> </span>
 <span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>      model_results <span class="sc">|&gt;</span> </span>
 <span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>      dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">model =</span> <span class="st">"ARIMA"</span>, <span class="at">p =</span> p, <span class="at">d =</span> <span class="dv">1</span>, <span class="at">q =</span> q, <span class="at">.before =</span> sigma2) <span class="sc">|&gt;</span></span>
@@ -898,7 +900,7 @@ Coefficient t-statistics:</code></pre>
  30.07064  32.80433 -35.86695 </code></pre>
 </div>
 </div></li>
-<li><p>We can work around this by changing the fitting method from the default of minimising conditional sum of squares to maximum likelihood.</p></li>
+<li><p>We can work around this by changing the fitting method from the default to maximum likelihood.</p></li>
 </ul>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>unknown_reg.ts.fit <span class="ot">&lt;-</span> unknown_reg.ts <span class="sc">|&gt;</span> </span>
@@ -956,11 +958,11 @@ Coefficient t-statistics:</code></pre>
 <span id="cb42-11"><a href="#cb42-11" aria-hidden="true" tabindex="-1"></a>      unknown_reg.ts <span class="sc">|&gt;</span> </span>
 <span id="cb42-12"><a href="#cb42-12" aria-hidden="true" tabindex="-1"></a>      fabletools<span class="sc">::</span><span class="fu">model</span>(</span>
 <span id="cb42-13"><a href="#cb42-13" aria-hidden="true" tabindex="-1"></a>        fable<span class="sc">::</span><span class="fu">ARIMA</span>(x <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> <span class="fu">pdq</span>(p, <span class="dv">1</span>, q) <span class="sc">+</span> <span class="fu">PDQ</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>) <span class="sc">+</span> </span>
-<span id="cb42-14"><a href="#cb42-14" aria-hidden="true" tabindex="-1"></a>                         z1 <span class="sc">+</span> z2 <span class="sc">+</span> z3 <span class="sc">+</span> z4 <span class="sc">+</span> z5 <span class="sc">+</span> z6, <span class="at">method =</span> <span class="st">"ML"</span>)</span>
+<span id="cb42-14"><a href="#cb42-14" aria-hidden="true" tabindex="-1"></a>                         z1 <span class="sc">+</span> z2 <span class="sc">+</span> z3 <span class="sc">+</span> z4 <span class="sc">+</span> z5 <span class="sc">+</span> z6)</span>
 <span id="cb42-15"><a href="#cb42-15" aria-hidden="true" tabindex="-1"></a>      ) <span class="sc">|&gt;</span> </span>
 <span id="cb42-16"><a href="#cb42-16" aria-hidden="true" tabindex="-1"></a>      fabletools<span class="sc">::</span><span class="fu">glance</span>()</span>
 <span id="cb42-17"><a href="#cb42-17" aria-hidden="true" tabindex="-1"></a>  })</span>
-<span id="cb42-18"><a href="#cb42-18" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">nrow</span>(model_results) <span class="sc">&gt;</span> <span class="dv">0</span>) { <span class="co"># Only include models that returned non-empty</span></span>
+<span id="cb42-18"><a href="#cb42-18" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">nrow</span>(model_results) <span class="sc">&gt;</span> <span class="dv">0</span>) { <span class="co"># Only include non-empty results</span></span>
 <span id="cb42-19"><a href="#cb42-19" aria-hidden="true" tabindex="-1"></a>    model_results <span class="ot">&lt;-</span> </span>
 <span id="cb42-20"><a href="#cb42-20" aria-hidden="true" tabindex="-1"></a>      model_results <span class="sc">|&gt;</span> </span>
 <span id="cb42-21"><a href="#cb42-21" aria-hidden="true" tabindex="-1"></a>      dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">model =</span> <span class="st">"ARIMA"</span>, <span class="at">p =</span> p, <span class="at">d =</span> <span class="dv">1</span>, <span class="at">q =</span> q, <span class="at">.before =</span> sigma2) <span class="sc">|&gt;</span></span>
@@ -1006,6 +1008,17 @@ Coefficient t-statistics:</code></pre>
 </tr>
 <tr class="even">
 <td style="text-align: left;">ARIMA</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">0.116</td>
+<td style="text-align: right;">-60.035</td>
+<td style="text-align: right;">148.070</td>
+<td style="text-align: right;">150.526</td>
+<td style="text-align: right;">193.230</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">ARIMA</td>
 <td style="text-align: right;">3</td>
 <td style="text-align: right;">1</td>
 <td style="text-align: right;">1</td>
@@ -1015,7 +1028,7 @@ Coefficient t-statistics:</code></pre>
 <td style="text-align: right;">149.869</td>
 <td style="text-align: right;">183.835</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">ARIMA</td>
 <td style="text-align: right;">2</td>
 <td style="text-align: right;">1</td>
@@ -1026,7 +1039,29 @@ Coefficient t-statistics:</code></pre>
 <td style="text-align: right;">150.099</td>
 <td style="text-align: right;">184.065</td>
 </tr>
+<tr class="odd">
+<td style="text-align: left;">ARIMA</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">0.116</td>
+<td style="text-align: right;">-59.765</td>
+<td style="text-align: right;">149.529</td>
+<td style="text-align: right;">152.353</td>
+<td style="text-align: right;">197.916</td>
+</tr>
 <tr class="even">
+<td style="text-align: left;">ARIMA</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">0.116</td>
+<td style="text-align: right;">-59.799</td>
+<td style="text-align: right;">149.599</td>
+<td style="text-align: right;">152.422</td>
+<td style="text-align: right;">197.985</td>
+</tr>
+<tr class="odd">
 <td style="text-align: left;">ARIMA</td>
 <td style="text-align: right;">2</td>
 <td style="text-align: right;">1</td>
@@ -1036,17 +1071,6 @@ Coefficient t-statistics:</code></pre>
 <td style="text-align: right;">149.670</td>
 <td style="text-align: right;">151.473</td>
 <td style="text-align: right;">188.379</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">ARIMA</td>
-<td style="text-align: right;">4</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">5</td>
-<td style="text-align: right;">0.115</td>
-<td style="text-align: right;">-58.911</td>
-<td style="text-align: right;">149.823</td>
-<td style="text-align: right;">153.042</td>
-<td style="text-align: right;">201.435</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">ARIMA</td>
@@ -1058,28 +1082,6 @@ Coefficient t-statistics:</code></pre>
 <td style="text-align: right;">149.993</td>
 <td style="text-align: right;">151.797</td>
 <td style="text-align: right;">188.702</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">ARIMA</td>
-<td style="text-align: right;">3</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">2</td>
-<td style="text-align: right;">0.121</td>
-<td style="text-align: right;">-63.066</td>
-<td style="text-align: right;">150.132</td>
-<td style="text-align: right;">151.936</td>
-<td style="text-align: right;">188.841</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">ARIMA</td>
-<td style="text-align: right;">5</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">5</td>
-<td style="text-align: right;">0.115</td>
-<td style="text-align: right;">-58.128</td>
-<td style="text-align: right;">150.256</td>
-<td style="text-align: right;">153.899</td>
-<td style="text-align: right;">205.093</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">ARIMA</td>
@@ -1096,6 +1098,17 @@ Coefficient t-statistics:</code></pre>
 <td style="text-align: left;">ARIMA</td>
 <td style="text-align: right;">3</td>
 <td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0.122</td>
+<td style="text-align: right;">-63.562</td>
+<td style="text-align: right;">151.124</td>
+<td style="text-align: right;">152.928</td>
+<td style="text-align: right;">189.833</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">ARIMA</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">1</td>
 <td style="text-align: right;">3</td>
 <td style="text-align: right;">0.121</td>
 <td style="text-align: right;">-62.576</td>
@@ -1103,7 +1116,7 @@ Coefficient t-statistics:</code></pre>
 <td style="text-align: right;">153.269</td>
 <td style="text-align: right;">193.087</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">ARIMA</td>
 <td style="text-align: right;">2</td>
 <td style="text-align: right;">1</td>
@@ -1114,32 +1127,101 @@ Coefficient t-statistics:</code></pre>
 <td style="text-align: right;">153.363</td>
 <td style="text-align: right;">193.181</td>
 </tr>
-<tr class="even">
-<td style="text-align: left;">ARIMA</td>
-<td style="text-align: right;">5</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">0.121</td>
-<td style="text-align: right;">-62.777</td>
-<td style="text-align: right;">151.554</td>
-<td style="text-align: right;">153.670</td>
-<td style="text-align: right;">193.489</td>
-</tr>
 <tr class="odd">
 <td style="text-align: left;">ARIMA</td>
-<td style="text-align: right;">5</td>
+<td style="text-align: right;">4</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0.122</td>
-<td style="text-align: right;">-63.790</td>
-<td style="text-align: right;">151.580</td>
-<td style="text-align: right;">153.383</td>
-<td style="text-align: right;">190.289</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">0.117</td>
+<td style="text-align: right;">-59.736</td>
+<td style="text-align: right;">151.473</td>
+<td style="text-align: right;">154.691</td>
+<td style="text-align: right;">203.084</td>
 </tr>
 </tbody>
 </table>
 </div>
 </div>
+</div>
+<ul>
+<li><p>We select the <span class="math inline">\((2,1,1)\)</span> model, it has the lowest AIC and fewer parameters than any of the other models with similar AICs.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>unknown_reg_final.ts.fit <span class="ot">&lt;-</span> unknown_reg.ts <span class="sc">|&gt;</span> </span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>  fabletools<span class="sc">::</span><span class="fu">model</span>(</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>    fable<span class="sc">::</span><span class="fu">ARIMA</span>(x <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> <span class="fu">pdq</span>(<span class="dv">2</span>,<span class="dv">1</span>,<span class="dv">1</span>) <span class="sc">+</span> <span class="fu">PDQ</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>) <span class="sc">+</span> z1 <span class="sc">+</span> z2 <span class="sc">+</span> z3 <span class="sc">+</span> z4 <span class="sc">+</span> z5 <span class="sc">+</span> z6)</span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>  ) </span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>unknown_reg_final.ts.fit <span class="sc">|&gt;</span> fabletools<span class="sc">::</span><span class="fu">report</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Series: x 
+Model: LM w/ ARIMA(2,1,1) errors 
+
+Coefficients:
+         ar1      ar2     ma1       z1      z2      z3      z4      z5       z6
+      0.7464  -0.5035  0.6661  -0.2096  0.1984  0.3032  0.5012  0.4986  -0.6012
+s.e.  0.0786   0.0754  0.0800   0.0171  0.0154  0.0156  0.0167  0.0152   0.0168
+
+sigma^2 estimated as 0.1202:  log likelihood=-63.56
+AIC=147.12   AICc=148.38   BIC=179.38</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">Coefficient t-statistics:</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Coefficient t-statistics:</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>unknown_reg_final.ts.fit[[<span class="dv">1</span>]][[<span class="dv">1</span>]]<span class="sc">$</span>fit<span class="sc">$</span>par<span class="sc">$</span>statistic</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       ar1        ar2        ma1         z1         z2         z3         z4 
+  9.492734  -6.678459   8.325397 -12.275392  12.870445  19.458289  30.069912 
+        z5         z6 
+ 32.803670 -35.865746 </code></pre>
+</div>
+</div></li>
+</ul>
+</section>
+<section id="question-f---deriving-forecast-equations" class="level2">
+<h2 class="anchored" data-anchor-id="question-f---deriving-forecast-equations">Question (f) - Deriving forecast equations</h2>
+</section>
+<section id="question-g---calculating-forecasts" class="level2">
+<h2 class="anchored" data-anchor-id="question-g---calculating-forecasts">Question (g) - Calculating forecasts</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>trading_day_forecast.df <span class="ot">&lt;-</span> trading_day.df[<span class="dv">188</span><span class="sc">:</span><span class="dv">189</span>,]</span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>z1_f <span class="ot">&lt;-</span> trading_day_forecast.df<span class="sc">$</span>mon <span class="sc">-</span> trading_day_forecast.df<span class="sc">$</span>sun</span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>z2_f <span class="ot">&lt;-</span> trading_day_forecast.df<span class="sc">$</span>tue <span class="sc">-</span> trading_day_forecast.df<span class="sc">$</span>sun</span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>z3_f <span class="ot">&lt;-</span> trading_day_forecast.df<span class="sc">$</span>wed <span class="sc">-</span> trading_day_forecast.df<span class="sc">$</span>sun</span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a>z4_f <span class="ot">&lt;-</span> trading_day_forecast.df<span class="sc">$</span>thur <span class="sc">-</span> trading_day_forecast.df<span class="sc">$</span>sun</span>
+<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a>z5_f <span class="ot">&lt;-</span> trading_day_forecast.df<span class="sc">$</span>fri <span class="sc">-</span> trading_day_forecast.df<span class="sc">$</span>sun</span>
+<span id="cb49-8"><a href="#cb49-8" aria-hidden="true" tabindex="-1"></a>z6_f <span class="ot">&lt;-</span> trading_day_forecast.df<span class="sc">$</span>sat <span class="sc">-</span> trading_day_forecast.df<span class="sc">$</span>sun</span>
+<span id="cb49-9"><a href="#cb49-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-10"><a href="#cb49-10" aria-hidden="true" tabindex="-1"></a>unknown_reg_future <span class="ot">&lt;-</span> </span>
+<span id="cb49-11"><a href="#cb49-11" aria-hidden="true" tabindex="-1"></a>  tsibble<span class="sc">::</span><span class="fu">new_data</span>(unknown_reg.ts, <span class="at">n =</span> <span class="dv">2</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb49-12"><a href="#cb49-12" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(</span>
+<span id="cb49-13"><a href="#cb49-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">z1 =</span> z1_f, <span class="at">z2 =</span> z2_f, <span class="at">z3 =</span> z3_f, <span class="at">z4 =</span> z4_f, <span class="at">z5 =</span> z5_f, <span class="at">z6 =</span> z6_f</span>
+<span id="cb49-14"><a href="#cb49-14" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb49-15"><a href="#cb49-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-16"><a href="#cb49-16" aria-hidden="true" tabindex="-1"></a>unknown_reg_final.ts.fit <span class="sc">|&gt;</span> </span>
+<span id="cb49-17"><a href="#cb49-17" aria-hidden="true" tabindex="-1"></a>  fabletools<span class="sc">::</span><span class="fu">forecast</span>(<span class="at">new_data =</span> unknown_reg_future) <span class="sc">|&gt;</span></span>
+<span id="cb49-18"><a href="#cb49-18" aria-hidden="true" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">autoplot</span>(unknown_reg.ts)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="a1_sub_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> unknown_reg_final.ts.fit <span class="sc">|&gt;</span> </span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>  fabletools<span class="sc">::</span><span class="fu">forecast</span>(<span class="at">new_data =</span> unknown_reg_future)</span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>x<span class="sc">$</span>x</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;distribution[2]&gt;
+[1] N(37, 0.12) N(34, 0.82)</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="co"># tmp_mdl &lt;- stats::arima(</span></span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a><span class="co">#   unknown_reg.ts$x,</span></span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a><span class="co">#   order = c(2,1,1),</span></span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a><span class="co">#   xreg = cbind(z1, z2, z3, z4, z5, z6)</span></span>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a><span class="co"># )</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="co"># stats::predict(tmp_mdl, n.ahead = 2, newxreg = cbind(z1_f, z2_f, z3_f, z4_f, z5_f, z6_f))</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 
