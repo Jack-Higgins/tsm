@@ -1,7 +1,10 @@
 ---
 title: "TSM Assignment 1"
 author: "Jack Higgins"
-format: html
+format: 
+  html:
+    embed-resources: true
+    self-contained-math: true
 page-layout: full
 toc: true
 crossref: 
@@ -9,8 +12,6 @@ crossref:
   fig-labels: arabic
   tbl-labels: arabic
 editor: visual
-embed-resources: true
-self-contained-math: true
 ---
 
 ```{r}
