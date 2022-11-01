@@ -1,0 +1,1249 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.0.36">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Jack Higgins">
+
+<title>TSM Assignment 1</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="a1_sub_files/libs/clipboard/clipboard.min.js"></script>
+<script src="a1_sub_files/libs/quarto-html/quarto.js"></script>
+<script src="a1_sub_files/libs/quarto-html/popper.min.js"></script>
+<script src="a1_sub_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="a1_sub_files/libs/quarto-html/anchor.min.js"></script>
+<link href="a1_sub_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="a1_sub_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="a1_sub_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="a1_sub_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="a1_sub_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+</head>
+
+<body>
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-full">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#question-a---inspecting-the-mystery-series" id="toc-question-a---inspecting-the-mystery-series" class="nav-link active" data-scroll-target="#question-a---inspecting-the-mystery-series">Question (a) - Inspecting the mystery series</a></li>
+  <li><a href="#question-b---fitting-an-arima-model" id="toc-question-b---fitting-an-arima-model" class="nav-link" data-scroll-target="#question-b---fitting-an-arima-model">Question (b) - Fitting an ARIMA model</a>
+  <ul class="collapse">
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary:</a></li>
+  <li><a href="#model-selection" id="toc-model-selection" class="nav-link" data-scroll-target="#model-selection">Model selection</a></li>
+  </ul></li>
+  <li><a href="#question-c---residual-analysis" id="toc-question-c---residual-analysis" class="nav-link" data-scroll-target="#question-c---residual-analysis">Question (c) - Residual analysis</a>
+  <ul class="collapse">
+  <li><a href="#summary-1" id="toc-summary-1" class="nav-link" data-scroll-target="#summary-1">Summary</a></li>
+  <li><a href="#exploring-the-residuals" id="toc-exploring-the-residuals" class="nav-link" data-scroll-target="#exploring-the-residuals">Exploring the residuals</a></li>
+  </ul></li>
+  <li><a href="#question-d---spectral-analysis" id="toc-question-d---spectral-analysis" class="nav-link" data-scroll-target="#question-d---spectral-analysis">Question (d) - Spectral analysis</a></li>
+  <li><a href="#question-e---fitting-a-regarima-model" id="toc-question-e---fitting-a-regarima-model" class="nav-link" data-scroll-target="#question-e---fitting-a-regarima-model">Question (e) - Fitting a RegARIMA model</a></li>
+  </ul>
+</nav>
+</div>
+<main class="content column-page-left" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">TSM Assignment 1</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Jack Higgins </p>
+          </div>
+  </div>
+    
+    
+  </div>
+  
+
+</header>
+
+<section id="question-a---inspecting-the-mystery-series" class="level2">
+<h2 class="anchored" data-anchor-id="question-a---inspecting-the-mystery-series">Question (a) - Inspecting the mystery series</h2>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-mystery-series-plot" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="a1_sub_files/figure-html/fig-mystery-series-plot-1.png" class="img-fluid figure-img" width="672"></p>
+<p></p><figcaption class="figure-caption">Figure 1: Mystery time series plot</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>Summary:</strong></p>
+<ul>
+<li><p>The mystery series is plotted in <a href="#fig-mystery-series-plot">Figure&nbsp;1</a> above.</p></li>
+<li><p>The series exhibits a pattern of successive <strong>increasing and decreasing trends</strong>.</p></li>
+<li><p>We consider the series <strong>non-stationary</strong>, since the aforementioned trends cause the level of the series to vary over time. As a result, the series <strong>requires differencing</strong> before applying an ARIMA model.</p></li>
+<li><p>Although the appears to have a sinusoidal shape, we <strong>cannot determine</strong> if the series is <strong>cyclic</strong> as we don’t have enough observations.</p></li>
+<li><p>The series <strong>does not appear to exhibit seasonality</strong>. Although there may appear a pattern of troughs and peaks that may look seasonal at first glance, it seems that these don’t occur at regular intervals, and are likely better explained as a result of unusual effects.</p></li>
+<li><p>Variability does not seem to correlate with the level of the series, though there does seem to be an <strong>increase in variability</strong> in the series from September 2011 onwards.</p></li>
+</ul>
+<p><strong>Further explanations:</strong></p>
+<p><em>Trends and cycles</em></p>
+<ul>
+<li><p>The series appears to take on a sinusoidal shape, where there seems to be a pattern of roughly five years on an increasing trend followed by five years of a decreasing trend. Specifically, we see a decreasing trend from the start of the series until mid 2005, from which we see the start of about five years of an increasing trend, followed by another five years of decreasing, and so on.</p></li>
+<li><p>Although the shape of this series may look cyclic, given that we only have fifteen years of data for what might be a cycle with a period of ten years or more (or an irregular period), we don’t have enough information to conclude if the series is cyclic.</p></li>
+</ul>
+<p><em>Stationarity and differencing</em></p>
+<ul>
+<li><p>The trends described above change the level of the series over time. This means the statistical properties will depend on the time at which the series is observed, and so by the definition given by Hyndman and Athanasopoulos in <a href="https://otexts.com/fpp3/stationarity.html#fn15">Forecasting: Principles and Practice</a>, the mystery series is non-stationary.</p></li>
+<li><p>As ARIMA models are only applicable to stationary series, we’ll need to transform the series to become stationary for part (b). We will see that taking the first difference yields a stationary series.</p></li>
+</ul>
+<p><em>Seasonality</em></p>
+<ul>
+<li><p>There doesn’t appear to be any obvious signs of seasonality. Although there is a rough pattern of relative peaks followed by troughs, the frequency of such doesn’t appear to be consistent over time, leading us to conclude that it not likely to be a seasonal effect.</p></li>
+<li><p>We can see these patterns don’t appear to happen at regular intervals in <a href="#fig-seasonal-plots">Figure&nbsp;2</a> below. This plot is similar to the regular time series plot above, except the x-axis shows data from within each season, which should make it easier to spot any seasonality. Although this plot does again show the behaviour of peaks being followed by troughs, it doesn’t appear that they occur in the same months each year, suggesting the behaviour is not seasonal. The periodogram provides further evidence that unusual effects have a significant impact on this series, as covered in question (d).</p></li>
+</ul>
+<div class="cell quarto-layout-panel">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 100.0%;justify-content: center;">
+<div id="fig-seasonal-plots" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="a1_sub_files/figure-html/fig-seasonal-plots-1.png" class="img-fluid figure-img" width="672"></p>
+<p></p><figcaption class="figure-caption">Figure 2: Seasonal stacked plot</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<p><em>Variability</em></p>
+<ul>
+<li><p>The variability of the series does not appear to change based on the level of the series.</p></li>
+<li><p>However, there seems to be a slight increase in variability after around September 2011, in the highlighted region of <a href="#fig-variability-change">Figure&nbsp;3</a> below. Since this change is quite small, for the sake of keeping our models and analysis simple we won’t make any adjustments for this.</p></li>
+</ul>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-variability-change" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="a1_sub_files/figure-html/fig-variability-change-1.png" class="img-fluid figure-img" width="672"></p>
+<p></p><figcaption class="figure-caption">Figure 3: Variability change seen in the time series</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="question-b---fitting-an-arima-model" class="level2">
+<h2 class="anchored" data-anchor-id="question-b---fitting-an-arima-model">Question (b) - Fitting an ARIMA model</h2>
+<section id="summary" class="level3">
+<h3 class="anchored" data-anchor-id="summary">Summary:</h3>
+<p>An <span class="math inline">\(ARIMA(3,1,2)\)</span> model was chosen. The model outputs are printed below.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>unknown.ts.fit <span class="ot">&lt;-</span> unknown.ts <span class="sc">|&gt;</span> </span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  fabletools<span class="sc">::</span><span class="fu">model</span>(fable<span class="sc">::</span><span class="fu">ARIMA</span>(x <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> <span class="fu">pdq</span>(<span class="dv">3</span>,<span class="dv">1</span>,<span class="dv">2</span>) <span class="sc">+</span> <span class="fu">PDQ</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>))) </span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>unknown.ts.fit <span class="sc">|&gt;</span> fabletools<span class="sc">::</span><span class="fu">report</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Series: x 
+Model: ARIMA(3,1,2) 
+
+Coefficients:
+          ar1      ar2      ar3     ma1     ma2
+      -1.3710  -1.2472  -0.2141  1.1279  1.0000
+s.e.   0.0779   0.0903   0.0777  0.0288  0.0213
+
+sigma^2 estimated as 1.16:  log likelihood=-279.77
+AIC=571.54   AICc=572.01   BIC=590.89</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">Coefficient t-statistics:</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Coefficient t-statistics:</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>unknown.ts.fit[[<span class="dv">1</span>]][[<span class="dv">1</span>]]<span class="sc">$</span>fit<span class="sc">$</span>par<span class="sc">$</span>statistic</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       ar1        ar2        ar3        ma1        ma2 
+-17.588837 -13.812721  -2.755308  39.147836  46.975072 </code></pre>
+</div>
+</div>
+</section>
+<section id="model-selection" class="level3">
+<h3 class="anchored" data-anchor-id="model-selection">Model selection</h3>
+<section id="model-identification" class="level4">
+<h4 class="anchored" data-anchor-id="model-identification">Model identification</h4>
+<ul>
+<li><p>Before fitting an ARIMA model, we must first ensure our data is stationary. Our series does not have seasonality, not does the variability appear to change with the level. Thus, the only transformation we need to perform is differencing to remove the trend component.</p></li>
+<li><p>As discussed in <a href="https://otexts.com/fpp3/stationarity.html">Forecasting: Principles and Practice</a>, a series of successive <em>Kwiatkowski-Phillips-Schmidt-Shin (KPSS) tests</em> (<a href="https://otexts.com/fpp3/stationarity.html#ref-KPSS92">Kwiatkowski et al., 1992</a>) can be used to determine the number of rounds of first differencing required. This is applied in the code block below, suggesting that a single difference is sufficient to make the data stationary.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>unknown.ts <span class="sc">|&gt;</span> </span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  fabletools<span class="sc">::</span><span class="fu">features</span>(x, unitroot_ndiffs) <span class="sc">|&gt;</span> </span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">pull</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  base<span class="sc">::</span><span class="fu">cat</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>1</code></pre>
+</div>
+</div></li>
+<li><p>When we plot the resultant series in <a href="#fig-mystery-series-diffed-plot">Figure&nbsp;4</a>, we note that it appears to now be stationary.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-mystery-series-diffed-plot" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="a1_sub_files/figure-html/fig-mystery-series-diffed-plot-1.png" class="img-fluid figure-img" width="672"></p>
+<p></p><figcaption class="figure-caption">Figure 4: Mystery time series plot after one difference</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div></li>
+<li><p>Although we could have jumped straight to visualising the plots to determine the amount of differencing required, it’s nice to have multiple methods that all agree with each other.</p></li>
+<li><p>Thus, in our ARIMA model, we set <span class="math inline">\(d = 1\)</span>.</p></li>
+<li><p>To start exploring what we might choose for <span class="math inline">\(p\)</span> and $q$, we plot the ACF and PACF in <a href="#fig-mystery-series-acf-pacf">Figure&nbsp;5</a>.</p></li>
+</ul>
+<div id="fig-mystery-series-acf-pacf" class="cell quarto-layout-panel">
+<figure class="figure">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
+<div id="fig-mystery-series-acf-pacf-1" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="a1_sub_files/figure-html/fig-mystery-series-acf-pacf-1.png" class="img-fluid figure-img" data-ref-parent="fig-mystery-series-acf-pacf" width="672"></p>
+<p></p><figcaption class="figure-caption">(a) ACF</figcaption><p></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
+<div id="fig-mystery-series-acf-pacf-2" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="a1_sub_files/figure-html/fig-mystery-series-acf-pacf-2.png" class="img-fluid figure-img" data-ref-parent="fig-mystery-series-acf-pacf" width="672"></p>
+<p></p><figcaption class="figure-caption">(b) PACF</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<p></p><figcaption class="figure-caption">Figure 5: Mystery differenced time series correlation plots</figcaption><p></p>
+</figure>
+</div>
+<ul>
+<li>Note that these plots show many significant peaks over an extended time period, so the usual methods of using these plots to give us starting values for <span class="math inline">\(p\)</span> and <span class="math inline">\(q\)</span> isn’t so useful here, though it does reveal that there may be both autoregressive and moving average components.</li>
+<li>However, note that each plot seems to have a pattern that repeats roughly every three peaks. This may indicate that each month in the series is significantly correlated with the value three months ago, so it might make sense to start by investigating a model with <span class="math inline">\(p = q = 3\)</span>.</li>
+<li>We attempt to fit this model using R below, but instead receive a warning with no fit provided:</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>unknown.ts <span class="sc">|&gt;</span> </span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  fabletools<span class="sc">::</span><span class="fu">model</span>(fable<span class="sc">::</span><span class="fu">ARIMA</span>(x <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> <span class="fu">pdq</span>(<span class="dv">3</span>,<span class="dv">1</span>,<span class="dv">3</span>) <span class="sc">+</span> <span class="fu">PDQ</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>))) <span class="sc">|&gt;</span> </span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  fabletools<span class="sc">::</span><span class="fu">report</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: 1 error encountered for fable::ARIMA(x ~ 0 + pdq(3, 1, 3) + PDQ(0, 0, 0))
+[1] non-stationary AR part from CSS</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Series: x 
+Model: NULL model 
+NULL model</code></pre>
+</div>
+</div>
+<ul>
+<li><p>This warning is received because the autoregressive coefficients estimated are non-stationary, as described by <a href="https://stackoverflow.com/a/7236919">Rob Hyndman here</a>. Specifically, there is <a href="https://otexts.com/fpp3/arima-r.html#plotting-the-characteristic-roots">at least one root of the AR polynomial that lies outside the unit circle</a>.</p></li>
+<li><p>As mentioned in the TSM lecture notes (pg. 52), this ensures the model selected will be invertible and causal, both of which are desirable. As covered in the lecture notes (pg. 54), if we wish to produce forecast intervals using a model, we require that the model has both these properties.</p></li>
+<li><p>Thus, a <span class="math inline">\((3, 1, 3)\)</span> model is not appropriate.</p></li>
+</ul>
+</section>
+<section id="model-search" class="level4">
+<h4 class="anchored" data-anchor-id="model-search">Model search</h4>
+<ul>
+<li><p>Since the ACF and PACF plots don’t provide much further guidance, we instead search through the entire space of ARIMA models with <span class="math inline">\(p &lt; 5\)</span>, <span class="math inline">\(d = 1\)</span> and <span class="math inline">\(q &lt; 5\)</span>. This involves fitting thirty six different models, four of which suffer similar issues to the <span class="math inline">\((3, 1, 3)\)</span> model.</p></li>
+<li><p>Although we could search though a much larger number of models by increasing the limits on the orders, given that we don’t have any information about the series (and so no real world context by which a larger order model could be justified), we elect to only fit smaller models, to reduce the risks of over-fitting.</p></li>
+<li><p>We search the model space in the code block below. <a href="#tbl-arima-models">Table&nbsp;1</a> shows the top thirteen models by AIC.</p></li>
+</ul>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>models <span class="ot">&lt;-</span> base<span class="sc">::</span><span class="fu">expand.grid</span>(<span class="at">p =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">5</span>, <span class="at">q =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">5</span>)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>results <span class="ot">&lt;-</span> tibble<span class="sc">::</span><span class="fu">tibble</span>()</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(models)) {</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  p <span class="ot">&lt;-</span> models[i, <span class="st">"p"</span>]</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>  q <span class="ot">&lt;-</span> models[i, <span class="st">"q"</span>]</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">try</span>({</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>    model_results <span class="ot">&lt;-</span> </span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>      unknown.ts <span class="sc">|&gt;</span> </span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>      fabletools<span class="sc">::</span><span class="fu">model</span>(fable<span class="sc">::</span><span class="fu">ARIMA</span>(x <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> <span class="fu">pdq</span>(p, <span class="dv">1</span>, q) <span class="sc">+</span> <span class="fu">PDQ</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>))) <span class="sc">|&gt;</span> </span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>      fabletools<span class="sc">::</span><span class="fu">glance</span>()</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">nrow</span>(model_results) <span class="sc">&gt;</span> <span class="dv">0</span>) { <span class="co"># Only include models that returned non-empty</span></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>    model_results <span class="ot">&lt;-</span> </span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>      model_results <span class="sc">|&gt;</span> </span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>      dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">model =</span> <span class="st">"ARIMA"</span>, <span class="at">p =</span> p, <span class="at">d =</span> <span class="dv">1</span>, <span class="at">q =</span> q, <span class="at">.before =</span> sigma2) <span class="sc">|&gt;</span></span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>      dplyr<span class="sc">::</span><span class="fu">mutate</span>(dplyr<span class="sc">::</span><span class="fu">across</span>(<span class="fu">where</span>(is.numeric), round, <span class="dv">3</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>      dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span>.model, <span class="sc">-</span>ar_roots, <span class="sc">-</span>ma_roots)</span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>    results <span class="ot">&lt;-</span> dplyr<span class="sc">::</span><span class="fu">bind_rows</span>(results, model_results)</span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a>results <span class="ot">&lt;-</span> results <span class="sc">|&gt;</span> dplyr<span class="sc">::</span><span class="fu">arrange</span>(AIC, p, q)</span>
+<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">head</span>(results, <span class="dv">13</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div id="tbl-arima-models" class="anchored">
+<table class="table table-sm table-striped">
+<caption>Table 1: <span class="math inline">\(ARIMA(p,d,q)\)</span> model outputs</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">model</th>
+<th style="text-align: right;">p</th>
+<th style="text-align: right;">d</th>
+<th style="text-align: right;">q</th>
+<th style="text-align: right;">sigma2</th>
+<th style="text-align: right;">log_lik</th>
+<th style="text-align: right;">AIC</th>
+<th style="text-align: right;">AICc</th>
+<th style="text-align: right;">BIC</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">ARIMA</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">1.117</td>
+<td style="text-align: right;">-275.685</td>
+<td style="text-align: right;">567.371</td>
+<td style="text-align: right;">568.184</td>
+<td style="text-align: right;">593.177</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ARIMA</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">1.123</td>
+<td style="text-align: right;">-275.619</td>
+<td style="text-align: right;">569.239</td>
+<td style="text-align: right;">570.261</td>
+<td style="text-align: right;">598.270</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">ARIMA</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1.160</td>
+<td style="text-align: right;">-279.769</td>
+<td style="text-align: right;">571.537</td>
+<td style="text-align: right;">572.007</td>
+<td style="text-align: right;">590.892</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ARIMA</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">1.164</td>
+<td style="text-align: right;">-280.097</td>
+<td style="text-align: right;">572.195</td>
+<td style="text-align: right;">572.664</td>
+<td style="text-align: right;">591.549</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">ARIMA</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">1.145</td>
+<td style="text-align: right;">-277.379</td>
+<td style="text-align: right;">572.758</td>
+<td style="text-align: right;">573.781</td>
+<td style="text-align: right;">601.790</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ARIMA</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1.152</td>
+<td style="text-align: right;">-278.469</td>
+<td style="text-align: right;">572.938</td>
+<td style="text-align: right;">573.751</td>
+<td style="text-align: right;">598.744</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">ARIMA</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1.162</td>
+<td style="text-align: right;">-279.487</td>
+<td style="text-align: right;">572.973</td>
+<td style="text-align: right;">573.602</td>
+<td style="text-align: right;">595.553</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ARIMA</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">1.169</td>
+<td style="text-align: right;">-280.007</td>
+<td style="text-align: right;">574.014</td>
+<td style="text-align: right;">574.643</td>
+<td style="text-align: right;">596.595</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">ARIMA</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">1.173</td>
+<td style="text-align: right;">-279.763</td>
+<td style="text-align: right;">575.526</td>
+<td style="text-align: right;">576.340</td>
+<td style="text-align: right;">601.332</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ARIMA</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">1.168</td>
+<td style="text-align: right;">-279.813</td>
+<td style="text-align: right;">575.626</td>
+<td style="text-align: right;">576.439</td>
+<td style="text-align: right;">601.432</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">ARIMA</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1.200</td>
+<td style="text-align: right;">-283.625</td>
+<td style="text-align: right;">577.251</td>
+<td style="text-align: right;">577.584</td>
+<td style="text-align: right;">593.379</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ARIMA</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">1.156</td>
+<td style="text-align: right;">-279.998</td>
+<td style="text-align: right;">577.995</td>
+<td style="text-align: right;">579.018</td>
+<td style="text-align: right;">607.027</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">ARIMA</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1.543</td>
+<td style="text-align: right;">-301.876</td>
+<td style="text-align: right;">617.751</td>
+<td style="text-align: right;">618.381</td>
+<td style="text-align: right;">640.332</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<ul>
+<li><p>Note that the top twelve models all have AICs are all quite similar. A rule of thumb, outlined in <a href="http://faculty.washington.edu/skalski/classes/QERM597/papers_xtra/Burnham%20and%20Anderson.pdf">Burnham &amp; Anderson 2004</a> and <a href="https://stats.stackexchange.com/a/232494">expanded on in this stack exchange post</a> states that if the models with AIC less than about four units more than the smallest AIC observed all have strong support.</p></li>
+<li><p>Since the <span class="math inline">\((3, 1, 2)\)</span> model has an AIC within 4 units of the top <span class="math inline">\((2, 1, 5)\)</span> model, but has fewer parameters to estimate, we choose to use the former.</p></li>
+<li><p>Other models that were considered include:</p>
+<ul>
+<li><p>The <span class="math inline">\((2, 1, 3)\)</span> model, which has only slightly larger AIC and BIC values than the selected model, so would also be a good candidate, particularly if we had good reason to believe the underlying process likely contained more MA components than AR components.</p></li>
+<li><p>The <span class="math inline">\((2, 1, 2)\)</span> model, which has a significantly has a higher AIC, but the BIC is fairly similar, and the AR estimated coefficients have much smaller standard errors. The high standard errors in the AR coefficients of the <span class="math inline">\((3, 1, 2)\)</span> in comparison to the <span class="math inline">\((2, 1, 2)\)</span> may suggest that there is some correlation/redundancy in the three AR terms. Nevertheless, the coefficients of the selected model are significant (see t-statistics), and the significantly lower AIC gives us reason to prefer the $(3, 1, 2)$ model.</p></li>
+</ul></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>unknown.ts <span class="sc">|&gt;</span> </span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  fabletools<span class="sc">::</span><span class="fu">model</span>(fable<span class="sc">::</span><span class="fu">ARIMA</span>(x <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> <span class="fu">pdq</span>(<span class="dv">2</span>,<span class="dv">1</span>,<span class="dv">2</span>) <span class="sc">+</span> <span class="fu">PDQ</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>))) <span class="sc">|&gt;</span> </span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  fabletools<span class="sc">::</span><span class="fu">report</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Series: x 
+Model: ARIMA(2,1,2) 
+
+Coefficients:
+          ar1      ar2     ma1    ma2
+      -1.1569  -0.9986  1.1086  1.000
+s.e.   0.0033   0.0016  0.0226  0.026
+
+sigma^2 estimated as 1.2:  log likelihood=-283.63
+AIC=577.25   AICc=577.58   BIC=593.38</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>unknown.ts <span class="sc">|&gt;</span> </span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  fabletools<span class="sc">::</span><span class="fu">model</span>(fable<span class="sc">::</span><span class="fu">ARIMA</span>(x <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> <span class="fu">pdq</span>(<span class="dv">3</span>,<span class="dv">1</span>,<span class="dv">2</span>) <span class="sc">+</span> <span class="fu">PDQ</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>))) <span class="sc">|&gt;</span> </span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  fabletools<span class="sc">::</span><span class="fu">report</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Series: x 
+Model: ARIMA(3,1,2) 
+
+Coefficients:
+          ar1      ar2      ar3     ma1     ma2
+      -1.3710  -1.2472  -0.2141  1.1279  1.0000
+s.e.   0.0779   0.0903   0.0777  0.0288  0.0213
+
+sigma^2 estimated as 1.16:  log likelihood=-279.77
+AIC=571.54   AICc=572.01   BIC=590.89</code></pre>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="question-c---residual-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="question-c---residual-analysis">Question (c) - Residual analysis</h2>
+<section id="summary-1" class="level3">
+<h3 class="anchored" data-anchor-id="summary-1">Summary</h3>
+<ul>
+<li><p>Although the simplest model has been chosen the residual component from the model may appear to be white noise, it appears that the residual terms are auto-correlated, not independent.</p></li>
+<li><p>This suggests the selected ARIMA model is not an appropriate model, as only two of the required three properties are observed.</p></li>
+<li><p>This is not unexpected, as alluded to earlier, we suspect there are unusual effects in the data that may result in autocorrelation.</p></li>
+</ul>
+</section>
+<section id="exploring-the-residuals" class="level3">
+<h3 class="anchored" data-anchor-id="exploring-the-residuals">Exploring the residuals</h3>
+<ul>
+<li>In order to come to the conclusions above, the residual time series and residual series ACF were plotted in <a href="#fig-mystery-series-residual-plots">Figure&nbsp;6</a> below.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>feasts<span class="sc">::</span><span class="fu">gg_tsresiduals</span>(unknown.ts.fit) <span class="co"># plot residuals and ACF</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-mystery-series-residual-plots" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="a1_sub_files/figure-html/fig-mystery-series-residual-plots-1.png" class="img-fluid figure-img" width="672"></p>
+<p></p><figcaption class="figure-caption">Figure 6: Plots of the residual series</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<ul>
+<li><p>The residual series could plausibly be considered white noise. The residual component has a close to zero mean and appears homoscedatic. The turning point test provides no evidence against the residuals being white noise, as</p></li>
+<li><p>However, the ACF shows significant peaks at multiple lags, suggestion that the residual series displays autocorrelation, violating property 2 in Property 2.5 from the lecture notes.</p></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">nrow</span>(unknown.ts)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>num_turning_points_upper <span class="ot">&lt;-</span> (<span class="dv">2</span> <span class="sc">*</span> n <span class="sc">/</span> <span class="dv">3</span>) <span class="sc">+</span> <span class="fl">1.96</span> <span class="sc">*</span> <span class="fu">sqrt</span>(<span class="dv">8</span> <span class="sc">*</span> n <span class="sc">/</span> <span class="dv">45</span>)</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>num_turning_points_lower <span class="ot">&lt;-</span> (<span class="dv">2</span> <span class="sc">*</span> n <span class="sc">/</span> <span class="dv">3</span>) <span class="sc">-</span> <span class="fl">1.96</span> <span class="sc">*</span> <span class="fu">sqrt</span>(<span class="dv">8</span> <span class="sc">*</span> n <span class="sc">/</span> <span class="dv">45</span>)</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>num_turning_points <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>model_residuals <span class="ot">&lt;-</span> stats<span class="sc">::</span><span class="fu">residuals</span>(unknown.ts.fit)</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (row <span class="cf">in</span> <span class="dv">2</span><span class="sc">:</span>(<span class="fu">nrow</span>(model_residuals) <span class="sc">-</span> <span class="dv">1</span>)) {</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>  prev_x <span class="ot">&lt;-</span> model_residuals[[row <span class="sc">-</span> <span class="dv">1</span>, <span class="st">".resid"</span>]]</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>  curr_x <span class="ot">&lt;-</span> model_residuals[[row, <span class="st">".resid"</span>]]</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>  next_x <span class="ot">&lt;-</span> model_residuals[[row <span class="sc">+</span> <span class="dv">1</span>, <span class="st">".resid"</span>]]</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> ((prev_x <span class="sc">&lt;</span> curr_x <span class="sc">&amp;</span> curr_x <span class="sc">&gt;</span> next_x) <span class="sc">|</span> </span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>      (prev_x <span class="sc">&gt;</span> curr_x <span class="sc">&amp;</span> curr_x <span class="sc">&lt;</span> next_x)) {</span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>    num_turning_points <span class="ot">&lt;-</span> num_turning_points <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a>residuals_mean <span class="ot">&lt;-</span> base<span class="sc">::</span><span class="fu">mean</span>(model_residuals<span class="sc">$</span>.resid)</span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">paste</span>(<span class="st">"Residual series mean:"</span>, <span class="fu">round</span>(residuals_mean, <span class="dv">4</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Residual series mean: -0.0503</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">paste0</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">Number of turning points: "</span>, num_turning_points, </span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>          <span class="st">", Upper bound: "</span>, <span class="fu">round</span>(num_turning_points_upper),</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>          <span class="st">", Lower bound: "</span>, <span class="fu">round</span>(num_turning_points_lower)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Number of turning points: 128, Upper bound: 136, Lower bound: 113</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="question-d---spectral-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="question-d---spectral-analysis">Question (d) - Spectral analysis</h2>
+<ul>
+<li>A variety of spectral estimations are plotted in <a href="#fig-spectral-estimation">Figure&nbsp;7</a> below.</li>
+</ul>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Note: We use ggplot to plot in this cell, instead of the built in plot options</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Get differenced series</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>unknown_diff <span class="ot">&lt;-</span> <span class="fu">difference</span>(unknown.ts<span class="sc">$</span>x, <span class="at">lag =</span> <span class="dv">1</span>)</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>unknown_diff <span class="ot">&lt;-</span> unknown_diff[<span class="sc">!</span><span class="fu">is.na</span>(unknown_diff)]</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Raw periodograms </span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Detrend doesn't make sense to use as it removes a linear trend,</span></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a><span class="co"># but our series doesn't have a linear trend.</span></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>periodogram_raw <span class="ot">&lt;-</span> </span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>  stats<span class="sc">::</span><span class="fu">spec.pgram</span>(unknown.ts<span class="sc">$</span>x, <span class="at">detrend =</span> <span class="cn">FALSE</span>, <span class="at">log =</span> <span class="st">"no"</span>, <span class="at">plot =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>periodogram_diff <span class="ot">&lt;-</span> </span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>  stats<span class="sc">::</span><span class="fu">spec.pgram</span>(unknown_diff, <span class="at">detrend =</span> <span class="cn">FALSE</span>, <span class="at">log =</span> <span class="st">"no"</span>, <span class="at">plot =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Smoothed</span></span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>smoothed_periodogram_raw <span class="ot">&lt;-</span> stats<span class="sc">::</span><span class="fu">spec.pgram</span>(</span>
+<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>  unknown.ts<span class="sc">$</span>x,</span>
+<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">detrend =</span> <span class="cn">FALSE</span>, </span>
+<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">log =</span> <span class="st">"no"</span>,</span>
+<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kernel</span>(<span class="st">"daniell"</span>, <span class="dv">1</span>),</span>
+<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">plot =</span> <span class="cn">FALSE</span></span>
+<span id="cb22-22"><a href="#cb22-22" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb22-23"><a href="#cb22-23" aria-hidden="true" tabindex="-1"></a>smoothed_periodogram_diff <span class="ot">&lt;-</span> stats<span class="sc">::</span><span class="fu">spec.pgram</span>(</span>
+<span id="cb22-24"><a href="#cb22-24" aria-hidden="true" tabindex="-1"></a>  unknown_diff,</span>
+<span id="cb22-25"><a href="#cb22-25" aria-hidden="true" tabindex="-1"></a>  <span class="at">detrend =</span> <span class="cn">FALSE</span>, </span>
+<span id="cb22-26"><a href="#cb22-26" aria-hidden="true" tabindex="-1"></a>  <span class="at">log =</span> <span class="st">"no"</span>,</span>
+<span id="cb22-27"><a href="#cb22-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kernel</span>(<span class="st">"daniell"</span>, <span class="dv">1</span>),</span>
+<span id="cb22-28"><a href="#cb22-28" aria-hidden="true" tabindex="-1"></a>  <span class="at">plot =</span> <span class="cn">FALSE</span></span>
+<span id="cb22-29"><a href="#cb22-29" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb22-30"><a href="#cb22-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-31"><a href="#cb22-31" aria-hidden="true" tabindex="-1"></a><span class="co"># AR spectral approximation</span></span>
+<span id="cb22-32"><a href="#cb22-32" aria-hidden="true" tabindex="-1"></a>ar_spec_raw <span class="ot">&lt;-</span> </span>
+<span id="cb22-33"><a href="#cb22-33" aria-hidden="true" tabindex="-1"></a>  stats<span class="sc">::</span><span class="fu">spec.ar</span>(unknown.ts<span class="sc">$</span>x, <span class="at">detrend =</span> <span class="cn">FALSE</span>, <span class="at">log =</span> <span class="st">"no"</span>, <span class="at">plot =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb22-34"><a href="#cb22-34" aria-hidden="true" tabindex="-1"></a>ar_spec_diff <span class="ot">&lt;-</span> </span>
+<span id="cb22-35"><a href="#cb22-35" aria-hidden="true" tabindex="-1"></a>  stats<span class="sc">::</span><span class="fu">spec.ar</span>(unknown_diff, <span class="at">detrend =</span> <span class="cn">FALSE</span>, <span class="at">log =</span> <span class="st">"no"</span>, <span class="at">plot =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb22-36"><a href="#cb22-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-37"><a href="#cb22-37" aria-hidden="true" tabindex="-1"></a><span class="co"># ARMA spectrum</span></span>
+<span id="cb22-38"><a href="#cb22-38" aria-hidden="true" tabindex="-1"></a>ar_coefficients <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">1.3710</span>, <span class="sc">-</span><span class="fl">1.2472</span>,  <span class="sc">-</span><span class="fl">0.2141</span>)</span>
+<span id="cb22-39"><a href="#cb22-39" aria-hidden="true" tabindex="-1"></a>ma_coefficients <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">1.1279</span>, <span class="fl">1.0000</span>)</span>
+<span id="cb22-40"><a href="#cb22-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-41"><a href="#cb22-41" aria-hidden="true" tabindex="-1"></a>arma_spec <span class="ot">&lt;-</span> astsa<span class="sc">::</span><span class="fu">arma.spec</span>(<span class="at">ar =</span> ar_coefficients, <span class="at">ma =</span> ma_coefficients)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div>
+<details open="">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>plot_spectrum <span class="ot">&lt;-</span> <span class="cf">function</span>(spec_list) {</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  plt <span class="ot">&lt;-</span> spec_list[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>] <span class="sc">|&gt;</span> </span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>    tibble<span class="sc">::</span><span class="fu">as_tibble</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>    ggplot2<span class="sc">::</span><span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> freq, <span class="at">y =</span> spec)) <span class="sc">+</span> </span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>    ggplot2<span class="sc">::</span><span class="fu">geom_line</span>()</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(plt)</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_spectrum</span>(periodogram_raw)</span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_spectrum</span>(periodogram_diff)</span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_spectrum</span>(smoothed_periodogram_raw)</span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_spectrum</span>(smoothed_periodogram_diff)</span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_spectrum</span>(ar_spec_raw)</span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_spectrum</span>(ar_spec_diff)</span>
+<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_spectrum</span>(arma_spec)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div id="fig-spectral-estimation" class="cell quarto-layout-panel">
+<figure class="figure">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
+<div id="fig-spectral-estimation-1" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="a1_sub_files/figure-html/fig-spectral-estimation-1.png" class="img-fluid figure-img" data-ref-parent="fig-spectral-estimation" width="672"></p>
+<p></p><figcaption class="figure-caption">(a) Periodogram of raw data</figcaption><p></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
+<div id="fig-spectral-estimation-2" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="a1_sub_files/figure-html/fig-spectral-estimation-2.png" class="img-fluid figure-img" data-ref-parent="fig-spectral-estimation" width="672"></p>
+<p></p><figcaption class="figure-caption">(b) Periodogram of differenced data</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
+<div id="fig-spectral-estimation-3" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="a1_sub_files/figure-html/fig-spectral-estimation-3.png" class="img-fluid figure-img" data-ref-parent="fig-spectral-estimation" width="672"></p>
+<p></p><figcaption class="figure-caption">(c) Smoothed periodogram of raw data</figcaption><p></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
+<div id="fig-spectral-estimation-4" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="a1_sub_files/figure-html/fig-spectral-estimation-4.png" class="img-fluid figure-img" data-ref-parent="fig-spectral-estimation" width="672"></p>
+<p></p><figcaption class="figure-caption">(d) Smoothed periodogram of differenced data</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
+<div id="fig-spectral-estimation-5" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="a1_sub_files/figure-html/fig-spectral-estimation-5.png" class="img-fluid figure-img" data-ref-parent="fig-spectral-estimation" width="672"></p>
+<p></p><figcaption class="figure-caption">(e) AR spectral approximation of raw data</figcaption><p></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
+<div id="fig-spectral-estimation-6" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="a1_sub_files/figure-html/fig-spectral-estimation-6.png" class="img-fluid figure-img" data-ref-parent="fig-spectral-estimation" width="672"></p>
+<p></p><figcaption class="figure-caption">(f) AR spectral approximation of differenced data</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
+<div id="fig-spectral-estimation-7" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="a1_sub_files/figure-html/fig-spectral-estimation-7.png" class="img-fluid figure-img" data-ref-parent="fig-spectral-estimation" width="672"></p>
+<p></p><figcaption class="figure-caption">(g) ARMA spectrum of selected model</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<p></p><figcaption class="figure-caption">Figure 7: Spectral estimation plots</figcaption><p></p>
+</figure>
+</div>
+</div>
+<ul>
+<li>Note that the spectral approximations that use the raw data all capture the trend component and a small peak at a frequency of 0.348, whereas the approximations on the differenced series have a much stronger peak at 0.348, and capture a peak at 0.432, which was not captured previously.</li>
+</ul>
+<div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_spectrum</span>(smoothed_periodogram_diff) <span class="sc">+</span> </span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fl">0.348</span>, <span class="at">colour =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fl">0.432</span>, <span class="at">colour =</span> <span class="st">"blue"</span>)</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_spectrum</span>(arma_spec) <span class="sc">+</span> </span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fl">0.348</span>, <span class="at">colour =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>  ggplot2<span class="sc">::</span><span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fl">0.432</span>, <span class="at">colour =</span> <span class="st">"blue"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div id="fig-trading-day-peaks" class="cell quarto-layout-panel">
+<figure class="figure">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
+<div id="fig-trading-day-peaks-1" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="a1_sub_files/figure-html/fig-trading-day-peaks-1.png" class="img-fluid figure-img" data-ref-parent="fig-trading-day-peaks" width="672"></p>
+<p></p><figcaption class="figure-caption">(a) Trading day peaks on smoothed periodogram</figcaption><p></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell quarto-layout-cell-subref" style="flex-basis: 50.0%;justify-content: center;">
+<div id="fig-trading-day-peaks-2" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="a1_sub_files/figure-html/fig-trading-day-peaks-2.png" class="img-fluid figure-img" data-ref-parent="fig-trading-day-peaks" width="672"></p>
+<p></p><figcaption class="figure-caption">(b) Trading day peaks on ARMA spectrum</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<p></p><figcaption class="figure-caption">Figure 8: Trading day effects peaks</figcaption><p></p>
+</figure>
+</div>
+</div>
+<ul>
+<li><p>As discussed in the TSM course, peaks at these frequencies are known to be suggestive of trading day effects. The presence of trading day effects in the series would explain many of the findings from the previous questions.</p></li>
+<li><p>Note that the ARMA spectrum for the fitted ARIMA (3,1,2) captures only one of these peaks. This suggests, that as we’d now expect, the fitted model isn’t capturing the trading day effects.</p></li>
+</ul>
+</section>
+<section id="question-e---fitting-a-regarima-model" class="level2">
+<h2 class="anchored" data-anchor-id="question-e---fitting-a-regarima-model">Question (e) - Fitting a RegARIMA model</h2>
+<ul>
+<li><p>As discovered in question (d), it is likely our data exhibits trading day effects.</p></li>
+<li><p>As described in the TSM lectures, in general we tend to observe lower trading activity on Mondays, Tuesdays and Wednesdays compared to the remaining days of the week. We make the assumption that the days within each of these two groups see roughly the same amount of activity.</p></li>
+<li><p>To construct a regressor, we use the approach discussed in the lectures. That is, we create six regressors, the first being the difference between the number of Mondays and Sundays in month <span class="math inline">\(t\)</span>, the next being the difference between the the number of Tuesdays and Sundays in month <span class="math inline">\(t\)</span> and so on.</p></li>
+<li><p>We construct these regressors below.</p></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>trading_day.df <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(<span class="st">"a1_trading_day_dates.csv"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  janitor<span class="sc">::</span><span class="fu">clean_names</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">unite</span>(month, <span class="fu">c</span>(year, month), <span class="at">sep =</span> <span class="st">" "</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">month =</span> tsibble<span class="sc">::</span><span class="fu">yearmonth</span>(month))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 189 Columns: 9
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+dbl (9): Year, Month, Sun, Mon, Tue, Wed, Thur, Fri, Sat
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>month_ <span class="ot">&lt;-</span> trading_day.df<span class="sc">$</span>month</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>z1 <span class="ot">&lt;-</span> trading_day.df<span class="sc">$</span>mon <span class="sc">-</span> trading_day.df<span class="sc">$</span>sun</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>z2 <span class="ot">&lt;-</span> trading_day.df<span class="sc">$</span>tue <span class="sc">-</span> trading_day.df<span class="sc">$</span>sun</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>z3 <span class="ot">&lt;-</span> trading_day.df<span class="sc">$</span>wed <span class="sc">-</span> trading_day.df<span class="sc">$</span>sun</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>z4 <span class="ot">&lt;-</span> trading_day.df<span class="sc">$</span>thur <span class="sc">-</span> trading_day.df<span class="sc">$</span>sun</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>z5 <span class="ot">&lt;-</span> trading_day.df<span class="sc">$</span>fri <span class="sc">-</span> trading_day.df<span class="sc">$</span>sun</span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>z6 <span class="ot">&lt;-</span> trading_day.df<span class="sc">$</span>sat <span class="sc">-</span> trading_day.df<span class="sc">$</span>sun</span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>xregs.ts <span class="ot">&lt;-</span> tibble<span class="sc">::</span><span class="fu">tibble</span>(month_, z1, z2, z3, z4, z5, z6) <span class="sc">|&gt;</span> </span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">rename</span>(<span class="at">month =</span> month_) <span class="sc">|&gt;</span> </span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">slice</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">187</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a>  tsibble<span class="sc">::</span><span class="fu">as_tibble</span>()</span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a>unknown_reg.ts <span class="ot">&lt;-</span> dplyr<span class="sc">::</span><span class="fu">left_join</span>(unknown.ts, xregs.ts, <span class="at">by =</span> <span class="st">"month"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li><p>Applying these regressors to the selected model, we run into some computational issues when calculating the coefficients.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>unknown_reg.ts.fit <span class="ot">&lt;-</span> unknown_reg.ts <span class="sc">|&gt;</span> </span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  fabletools<span class="sc">::</span><span class="fu">model</span>(</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>    fable<span class="sc">::</span><span class="fu">ARIMA</span>(x <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> <span class="fu">pdq</span>(<span class="dv">3</span>,<span class="dv">1</span>,<span class="dv">2</span>) <span class="sc">+</span> <span class="fu">PDQ</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>) <span class="sc">+</span> z1 <span class="sc">+</span> z2 <span class="sc">+</span> z3 <span class="sc">+</span> z4 <span class="sc">+</span> z5 <span class="sc">+</span> z6)</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  ) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in sqrt(diag(best$var.coef)): NaNs produced</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>unknown_reg.ts.fit <span class="sc">|&gt;</span> fabletools<span class="sc">::</span><span class="fu">report</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Series: x 
+Model: LM w/ ARIMA(3,1,2) errors 
+
+Coefficients:
+         ar1      ar2     ar3     ma1      ma2       z1      z2      z3      z4
+      1.3403  -0.9466  0.2989  0.0722  -0.3958  -0.2096  0.1984  0.3032  0.5012
+s.e.     NaN      NaN     NaN     NaN      NaN   0.0171  0.0154  0.0156  0.0167
+          z5       z6
+      0.4986  -0.6012
+s.e.  0.0152   0.0168
+
+sigma^2 estimated as 0.1216:  log likelihood=-63.56
+AIC=151.12   AICc=152.93   BIC=189.83</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">Coefficient t-statistics:</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Coefficient t-statistics:</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>unknown_reg.ts.fit[[<span class="dv">1</span>]][[<span class="dv">1</span>]]<span class="sc">$</span>fit<span class="sc">$</span>par<span class="sc">$</span>statistic</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      ar1       ar2       ar3       ma1       ma2        z1        z2        z3 
+      NaN       NaN       NaN       NaN       NaN -12.27484  12.87012  19.45789 
+       z4        z5        z6 
+ 30.07064  32.80433 -35.86695 </code></pre>
+</div>
+</div></li>
+<li><p>We can work around this by changing the fitting method from the default of minimising conditional sum of squares to maximum likelihood.</p></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>unknown_reg.ts.fit <span class="ot">&lt;-</span> unknown_reg.ts <span class="sc">|&gt;</span> </span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>  fabletools<span class="sc">::</span><span class="fu">model</span>(</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>    fable<span class="sc">::</span><span class="fu">ARIMA</span>(x <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> <span class="fu">pdq</span>(<span class="dv">3</span>,<span class="dv">1</span>,<span class="dv">2</span>) <span class="sc">+</span> <span class="fu">PDQ</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>) <span class="sc">+</span> z1 <span class="sc">+</span> z2 <span class="sc">+</span> z3 <span class="sc">+</span> z4 <span class="sc">+</span> z5 <span class="sc">+</span> z6,</span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>                 <span class="at">method =</span> <span class="st">"ML"</span>)</span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>  ) </span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>unknown_reg.ts.fit <span class="sc">|&gt;</span> fabletools<span class="sc">::</span><span class="fu">report</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Series: x 
+Model: LM w/ ARIMA(3,1,2) errors 
+
+Coefficients:
+         ar1      ar2      ar3     ma1     ma2       z1      z2      z3      z4
+      0.2722  -0.1091  -0.2902  1.1247  0.2584  -0.2053  0.1947  0.2987  0.5068
+s.e.  0.6875   0.4882   0.3213  0.6980  0.5060   0.0173  0.0157  0.0162  0.0171
+          z5       z6
+      0.4998  -0.6048
+s.e.  0.0154   0.0169
+
+sigma^2 estimated as 0.1209:  log likelihood=-63.07
+AIC=150.13   AICc=151.94   BIC=188.84</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">Coefficient t-statistics:</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Coefficient t-statistics:</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>unknown_reg.ts.fit[[<span class="dv">1</span>]][[<span class="dv">1</span>]]<span class="sc">$</span>fit<span class="sc">$</span>par<span class="sc">$</span>statistic</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>        ar1         ar2         ar3         ma1         ma2          z1 
+  0.3959738  -0.2234505  -0.9032146   1.6114082   0.5106357 -11.8779836 
+         z2          z3          z4          z5          z6 
+ 12.4152618  18.4607808  29.7165568  32.5241815 -35.7090055 </code></pre>
+</div>
+</div>
+<ul>
+<li><p>In any case, we see that this new model has a much lower AIC than the previous model, indicating it is a much better fit. However, while the regressor coefficients are all significant, we see that AR and MA components are no longer significant. This suggests, as we’d expect when including such important additional information, the previous model is no longer appropriate.</p></li>
+<li><p>As we did in question (b), we search through the space of relevant RegARIMA models to select a new model.</p></li>
+</ul>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>models <span class="ot">&lt;-</span> base<span class="sc">::</span><span class="fu">expand.grid</span>(<span class="at">p =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">5</span>, <span class="at">q =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">5</span>)</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>results_reg <span class="ot">&lt;-</span> tibble<span class="sc">::</span><span class="fu">tibble</span>()</span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(models)) {</span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a>  p <span class="ot">&lt;-</span> models[i, <span class="st">"p"</span>]</span>
+<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a>  q <span class="ot">&lt;-</span> models[i, <span class="st">"q"</span>]</span>
+<span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb42-9"><a href="#cb42-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">try</span>({</span>
+<span id="cb42-10"><a href="#cb42-10" aria-hidden="true" tabindex="-1"></a>    model_results <span class="ot">&lt;-</span> </span>
+<span id="cb42-11"><a href="#cb42-11" aria-hidden="true" tabindex="-1"></a>      unknown_reg.ts <span class="sc">|&gt;</span> </span>
+<span id="cb42-12"><a href="#cb42-12" aria-hidden="true" tabindex="-1"></a>      fabletools<span class="sc">::</span><span class="fu">model</span>(</span>
+<span id="cb42-13"><a href="#cb42-13" aria-hidden="true" tabindex="-1"></a>        fable<span class="sc">::</span><span class="fu">ARIMA</span>(x <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> <span class="fu">pdq</span>(p, <span class="dv">1</span>, q) <span class="sc">+</span> <span class="fu">PDQ</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>) <span class="sc">+</span> </span>
+<span id="cb42-14"><a href="#cb42-14" aria-hidden="true" tabindex="-1"></a>                         z1 <span class="sc">+</span> z2 <span class="sc">+</span> z3 <span class="sc">+</span> z4 <span class="sc">+</span> z5 <span class="sc">+</span> z6, <span class="at">method =</span> <span class="st">"ML"</span>)</span>
+<span id="cb42-15"><a href="#cb42-15" aria-hidden="true" tabindex="-1"></a>      ) <span class="sc">|&gt;</span> </span>
+<span id="cb42-16"><a href="#cb42-16" aria-hidden="true" tabindex="-1"></a>      fabletools<span class="sc">::</span><span class="fu">glance</span>()</span>
+<span id="cb42-17"><a href="#cb42-17" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb42-18"><a href="#cb42-18" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">nrow</span>(model_results) <span class="sc">&gt;</span> <span class="dv">0</span>) { <span class="co"># Only include models that returned non-empty</span></span>
+<span id="cb42-19"><a href="#cb42-19" aria-hidden="true" tabindex="-1"></a>    model_results <span class="ot">&lt;-</span> </span>
+<span id="cb42-20"><a href="#cb42-20" aria-hidden="true" tabindex="-1"></a>      model_results <span class="sc">|&gt;</span> </span>
+<span id="cb42-21"><a href="#cb42-21" aria-hidden="true" tabindex="-1"></a>      dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">model =</span> <span class="st">"ARIMA"</span>, <span class="at">p =</span> p, <span class="at">d =</span> <span class="dv">1</span>, <span class="at">q =</span> q, <span class="at">.before =</span> sigma2) <span class="sc">|&gt;</span></span>
+<span id="cb42-22"><a href="#cb42-22" aria-hidden="true" tabindex="-1"></a>      dplyr<span class="sc">::</span><span class="fu">mutate</span>(dplyr<span class="sc">::</span><span class="fu">across</span>(<span class="fu">where</span>(is.numeric), round, <span class="dv">3</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb42-23"><a href="#cb42-23" aria-hidden="true" tabindex="-1"></a>      dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span>.model, <span class="sc">-</span>ar_roots, <span class="sc">-</span>ma_roots)</span>
+<span id="cb42-24"><a href="#cb42-24" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb42-25"><a href="#cb42-25" aria-hidden="true" tabindex="-1"></a>    results_reg <span class="ot">&lt;-</span> dplyr<span class="sc">::</span><span class="fu">bind_rows</span>(results_reg, model_results)</span>
+<span id="cb42-26"><a href="#cb42-26" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb42-27"><a href="#cb42-27" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb42-28"><a href="#cb42-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-29"><a href="#cb42-29" aria-hidden="true" tabindex="-1"></a>results_reg <span class="ot">&lt;-</span> results_reg <span class="sc">|&gt;</span> dplyr<span class="sc">::</span><span class="fu">arrange</span>(AIC, p, q)</span>
+<span id="cb42-30"><a href="#cb42-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-31"><a href="#cb42-31" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">head</span>(results_reg, <span class="dv">13</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div id="tbl-reg-arima-models" class="anchored">
+<table class="table table-sm table-striped">
+<caption>Table 2: RegARIMA model outputs</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">model</th>
+<th style="text-align: right;">p</th>
+<th style="text-align: right;">d</th>
+<th style="text-align: right;">q</th>
+<th style="text-align: right;">sigma2</th>
+<th style="text-align: right;">log_lik</th>
+<th style="text-align: right;">AIC</th>
+<th style="text-align: right;">AICc</th>
+<th style="text-align: right;">BIC</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">ARIMA</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.120</td>
+<td style="text-align: right;">-63.562</td>
+<td style="text-align: right;">147.124</td>
+<td style="text-align: right;">148.382</td>
+<td style="text-align: right;">179.382</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ARIMA</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.120</td>
+<td style="text-align: right;">-63.176</td>
+<td style="text-align: right;">148.351</td>
+<td style="text-align: right;">149.869</td>
+<td style="text-align: right;">183.835</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">ARIMA</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0.121</td>
+<td style="text-align: right;">-63.291</td>
+<td style="text-align: right;">148.582</td>
+<td style="text-align: right;">150.099</td>
+<td style="text-align: right;">184.065</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ARIMA</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">0.121</td>
+<td style="text-align: right;">-62.835</td>
+<td style="text-align: right;">149.670</td>
+<td style="text-align: right;">151.473</td>
+<td style="text-align: right;">188.379</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">ARIMA</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">0.115</td>
+<td style="text-align: right;">-58.911</td>
+<td style="text-align: right;">149.823</td>
+<td style="text-align: right;">153.042</td>
+<td style="text-align: right;">201.435</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ARIMA</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.121</td>
+<td style="text-align: right;">-62.997</td>
+<td style="text-align: right;">149.993</td>
+<td style="text-align: right;">151.797</td>
+<td style="text-align: right;">188.702</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">ARIMA</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0.121</td>
+<td style="text-align: right;">-63.066</td>
+<td style="text-align: right;">150.132</td>
+<td style="text-align: right;">151.936</td>
+<td style="text-align: right;">188.841</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ARIMA</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">0.115</td>
+<td style="text-align: right;">-58.128</td>
+<td style="text-align: right;">150.256</td>
+<td style="text-align: right;">153.899</td>
+<td style="text-align: right;">205.093</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">ARIMA</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0.121</td>
+<td style="text-align: right;">-62.415</td>
+<td style="text-align: right;">150.830</td>
+<td style="text-align: right;">152.946</td>
+<td style="text-align: right;">192.765</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ARIMA</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">0.121</td>
+<td style="text-align: right;">-62.576</td>
+<td style="text-align: right;">151.152</td>
+<td style="text-align: right;">153.269</td>
+<td style="text-align: right;">193.087</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">ARIMA</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">0.121</td>
+<td style="text-align: right;">-62.623</td>
+<td style="text-align: right;">151.246</td>
+<td style="text-align: right;">153.363</td>
+<td style="text-align: right;">193.181</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ARIMA</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.121</td>
+<td style="text-align: right;">-62.777</td>
+<td style="text-align: right;">151.554</td>
+<td style="text-align: right;">153.670</td>
+<td style="text-align: right;">193.489</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">ARIMA</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.122</td>
+<td style="text-align: right;">-63.790</td>
+<td style="text-align: right;">151.580</td>
+<td style="text-align: right;">153.383</td>
+<td style="text-align: right;">190.289</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      let href = ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

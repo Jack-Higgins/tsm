@@ -1,0 +1,643 @@
+---
+title: "TSM Assignment 1"
+author: "Jack Higgins"
+format: html
+page-layout: full
+toc: true
+crossref: 
+  labels: alpha a
+  fig-labels: arabic
+  tbl-labels: arabic
+editor: visual
+---
+
+```{r}
+#| include: false
+library(tidyverse)
+library(fpp3)
+library(seasonal)
+library(knitr)
+library(astsa)
+ggplot2::theme_set(ggplot2::theme_bw())
+```
+
+```{r}
+#| include: false
+#| label: data_loading_and_cleansing
+
+unknown_raw.df <- readr::read_csv("a1_data.csv", col_types = cols())
+
+index_dates <- tidyr::crossing(year = 2003:2018, month = 1:12) |> 
+  dplyr::slice(1:187) |>
+  tidyr::unite(month, c(year, month), sep = " ") |> 
+  dplyr::mutate(month = tsibble::yearmonth(month))
+
+unknown.df <- unknown_raw.df |> 
+  tibble::add_column(index_dates, .before = "x")
+
+unknown.ts <- unknown.df |>
+  tsibble::as_tsibble(index = month)
+```
+
+## Question (a) - Inspecting the mystery series
+
+```{r}
+#| echo: false
+#| label: fig-mystery-series-plot
+#| fig-cap: Mystery time series plot
+
+unknown.ts_plot <- unknown.ts |>
+  feasts::autoplot(x, alpha = 0.5) +
+  ggplot2::geom_point(size = 0.7) +
+  ggplot2::labs(
+    title = "Mystery time series plot",
+    x = "Month"
+  )
+
+graphics::plot(unknown.ts_plot)
+```
+
+**Summary:**
+
+-   The mystery series is plotted in @fig-mystery-series-plot above.
+
+-   The series exhibits a pattern of successive **increasing and decreasing trends**.
+
+-   We consider the series **non-stationary**, since the aforementioned trends cause the level of the series to vary over time. As a result, the series **requires differencing** before applying an ARIMA model.
+
+-   Although the appears to have a sinusoidal shape, we **cannot determine** if the series is **cyclic** as we don't have enough observations.
+
+-   The series **does not appear to exhibit seasonality**. Although there may appear a pattern of troughs and peaks that may look seasonal at first glance, it seems that these don't occur at regular intervals, and are likely better explained as a result of unusual effects.
+
+-   Variability does not seem to correlate with the level of the series, though there does seem to be an **increase in variability** in the series from September 2011 onwards.
+
+**Further explanations:**
+
+*Trends and cycles*
+
+-   The series appears to take on a sinusoidal shape, where there seems to be a pattern of roughly five years on an increasing trend followed by five years of a decreasing trend. Specifically, we see a decreasing trend from the start of the series until mid 2005, from which we see the start of about five years of an increasing trend, followed by another five years of decreasing, and so on.
+
+-   Although the shape of this series may look cyclic, given that we only have fifteen years of data for what might be a cycle with a period of ten years or more (or an irregular period), we don't have enough information to conclude if the series is cyclic.
+
+*Stationarity and differencing*
+
+-   The trends described above change the level of the series over time. This means the statistical properties will depend on the time at which the series is observed, and so by the definition given by Hyndman and Athanasopoulos in [Forecasting: Principles and Practice](https://otexts.com/fpp3/stationarity.html#fn15), the mystery series is non-stationary.
+
+-   As ARIMA models are only applicable to stationary series, we'll need to transform the series to become stationary for part (b). We will see that taking the first difference yields a stationary series.
+
+*Seasonality*
+
+-   There doesn't appear to be any obvious signs of seasonality. Although there is a rough pattern of relative peaks followed by troughs, the frequency of such doesn't appear to be consistent over time, leading us to conclude that it not likely to be a seasonal effect.
+
+-   We can see these patterns don't appear to happen at regular intervals in @fig-seasonal-plots below. This plot is similar to the regular time series plot above, except the x-axis shows data from within each season, which should make it easier to spot any seasonality. Although this plot does again show the behaviour of peaks being followed by troughs, it doesn't appear that they occur in the same months each year, suggesting the behaviour is not seasonal. The periodogram provides further evidence that unusual effects have a significant impact on this series, as covered in question (d).
+
+```{r}
+#| echo: false
+#| label: fig-seasonal-plots
+#| fig-cap: Seasonal stacked plot
+#| layout-ncol: 1
+#| layout-nrow: 1
+unknown_seasons.ts_plot <- unknown.ts |> 
+  feasts::gg_season(x) +
+    ggplot2::geom_point(size = 0.7) +
+    ggplot2::labs(
+      title = "Stacked seasonal plot",
+      x = "Month"
+    )
+
+# If we attempt to perform an STL decomposition, we see on the plot below that although we do get what appears to look like seasonal behaviour in the third sub-plot. However, STL decompositions do not automatically account for usual/calendar effects, and the magnitude of this variation (between negative half and one) is significantly less than the remainder component in the fourth sub-plot (which varies between negative three and three). 
+
+# stl_dcmp.plot <- unknown.ts |> 
+#   fabletools::model(
+#     feasts::STL(x)
+#   ) |>
+#   generics::components() |> 
+#   ggplot2::autoplot() +
+#   labs(title = "Decomposition of mystery series using STL")
+
+graphics::plot(unknown_seasons.ts_plot)
+# graphics::plot(stl_dcmp.plot)
+```
+
+*Variability*
+
+-   The variability of the series does not appear to change based on the level of the series.
+
+-   However, there seems to be a slight increase in variability after around September 2011, in the highlighted region of @fig-variability-change below. Since this change is quite small, for the sake of keeping our models and analysis simple we won't make any adjustments for this.
+
+```{r}
+#| echo: false
+#| label: fig-variability-change
+#| fig-cap: Variability change seen in the time series
+
+# Adding in the day component to make the dates a full ymd format
+# is required to get the vertical lines to work on the plot.
+# Not sure why it doesn't work with just year and month.
+# https://stackoverflow.com/a/66401164
+index_dates <- tidyr::crossing(year = 2003:2018, month = 1:12) |> 
+  dplyr::slice(1:187) |>
+  dplyr::mutate(day = rep(1, 187)) |> 
+  tidyr::unite(month, c(year, month, day), sep = " ") |> 
+  dplyr::mutate(month = lubridate::ymd(month))
+
+unknown_day.ts <- unknown_raw.df |> 
+  tibble::add_column(index_dates, .before = "x") |> 
+  tsibble::as_tsibble(index = month)
+
+first_period <- unknown_day.ts[[1, "month"]]
+last_period <- unknown_day.ts[[nrow(unknown.ts), "month"]]
+vline_change <- lubridate::ymd("2011 Sep 1")
+vline_end <- lubridate::ymd("2020 Jul 1")
+
+unknown.ts_plot <- unknown_day.ts |>
+  feasts::autoplot(x, alpha = 0.7) +
+  ggplot2::geom_point(size = 0.7) +
+  ggplot2::annotate(
+    "rect",
+    xmin = vline_change, xmax = vline_end, ymin = 25, ymax = Inf,
+    fill = "blue", alpha = 0.05,
+  ) +
+  ggplot2::coord_cartesian(
+    xlim = c(first_period, last_period), 
+    ylim = c(27.5, 47.5)
+  ) +
+  ggplot2::labs(
+    title = "Mystery time series plot",
+    x = "Month"
+  )
+
+unknown.ts_plot
+```
+
+## Question (b) - Fitting an ARIMA model
+
+### Summary:
+
+An $ARIMA(3,1,2)$ model was chosen. The model outputs are printed below.
+
+```{r}
+#| label: selected-ARIMA(3,1,2)-model
+unknown.ts.fit <- unknown.ts |> 
+  fabletools::model(fable::ARIMA(x ~ 0 + pdq(3,1,2) + PDQ(0,0,0))) 
+
+unknown.ts.fit |> fabletools::report()
+
+cat("\nCoefficient t-statistics:\n")
+unknown.ts.fit[[1]][[1]]$fit$par$statistic
+```
+
+### Model selection
+
+#### Model identification
+
+-   Before fitting an ARIMA model, we must first ensure our data is stationary. Our series does not have seasonality, not does the variability appear to change with the level. Thus, the only transformation we need to perform is differencing to remove the trend component.
+
+-   As discussed in [Forecasting: Principles and Practice](https://otexts.com/fpp3/stationarity.html), a series of successive *Kwiatkowski-Phillips-Schmidt-Shin (KPSS) tests* ([Kwiatkowski et al., 1992](https://otexts.com/fpp3/stationarity.html#ref-KPSS92)) can be used to determine the number of rounds of first differencing required. This is applied in the code block below, suggesting that a single difference is sufficient to make the data stationary.
+
+    ```{r}
+    #| label: kpss test
+    unknown.ts |> 
+      fabletools::features(x, unitroot_ndiffs) |> 
+      dplyr::pull() |> 
+      base::cat()
+    ```
+
+-   When we plot the resultant series in @fig-mystery-series-diffed-plot, we note that it appears to now be stationary.
+
+    ```{r}
+    #| echo: false
+    #| label: fig-mystery-series-diffed-plot
+    #| fig-cap: Mystery time series plot after one difference
+    #| warning: false
+    unknown_diffed.ts_plot <- unknown.ts |>
+      feasts::autoplot(tsibble::difference(x, lag = 1), alpha = 0.5) +
+      ggplot2::geom_point(size = 0.7) +
+      ggplot2::labs(
+        title = "Mystery time series plot after one difference",
+        x = "Month"
+      )
+
+    graphics::plot(unknown_diffed.ts_plot)
+    ```
+
+-   Although we could have jumped straight to visualising the plots to determine the amount of differencing required, it's nice to have multiple methods that all agree with each other.
+
+-   Thus, in our ARIMA model, we set $d = 1$.
+
+-   To start exploring what we might choose for $p$ and \$q\$, we plot the ACF and PACF in @fig-mystery-series-acf-pacf.
+
+```{r}
+#| echo: false
+#| label: fig-mystery-series-acf-pacf
+#| fig-cap: Mystery differenced time series correlation plots
+#| fig-subcap: 
+#|   - "ACF"
+#|   - "PACF"
+#| layout-ncol: 2
+unknown.ts |> 
+  feasts::ACF(difference(x, lag = 1)) |> 
+  ggplot2::autoplot()
+
+unknown.ts |> 
+  feasts::PACF(difference(x, lag = 1)) |> 
+  ggplot2::autoplot()
+```
+
+-   Note that these plots show many significant peaks over an extended time period, so the usual methods of using these plots to give us starting values for $p$ and $q$ isn't so useful here, though it does reveal that there may be both autoregressive and moving average components.
+-   However, note that each plot seems to have a pattern that repeats roughly every three peaks. This may indicate that each month in the series is significantly correlated with the value three months ago, so it might make sense to start by investigating a model with $p = q = 3$.
+-   We attempt to fit this model using R below, but instead receive a warning with no fit provided:
+
+```{r}
+unknown.ts |> 
+  fabletools::model(fable::ARIMA(x ~ 0 + pdq(3,1,3) + PDQ(0,0,0))) |> 
+  fabletools::report()
+```
+
+-   This warning is received because the autoregressive coefficients estimated are non-stationary, as described by [Rob Hyndman here](https://stackoverflow.com/a/7236919). Specifically, there is [at least one root of the AR polynomial that lies outside the unit circle](https://otexts.com/fpp3/arima-r.html#plotting-the-characteristic-roots).
+
+-   As mentioned in the TSM lecture notes (pg. 52), this ensures the model selected will be invertible and causal, both of which are desirable. As covered in the lecture notes (pg. 54), if we wish to produce forecast intervals using a model, we require that the model has both these properties.
+
+-   Thus, a $(3, 1, 3)$ model is not appropriate.
+
+#### Model search
+
+-   Since the ACF and PACF plots don't provide much further guidance, we instead search through the entire space of ARIMA models with $p < 5$, $d = 1$ and $q < 5$. This involves fitting thirty six different models, four of which suffer similar issues to the $(3, 1, 3)$ model.
+
+-   Although we could search though a much larger number of models by increasing the limits on the orders, given that we don't have any information about the series (and so no real world context by which a larger order model could be justified), we elect to only fit smaller models, to reduce the risks of over-fitting.
+
+-   We search the model space in the code block below. @tbl-arima-models shows the top thirteen models by AIC.
+
+```{r}
+#| label: tbl-arima-models
+#| tbl-cap: $ARIMA(p,d,q)$ model outputs
+#| warning: false
+#| code-fold: true
+models <- base::expand.grid(p = 0:5, q = 0:5)
+
+results <- tibble::tibble()
+
+for (i in 1:nrow(models)) {
+  p <- models[i, "p"]
+  q <- models[i, "q"]
+  
+  try({
+    model_results <- 
+      unknown.ts |> 
+      fabletools::model(fable::ARIMA(x ~ 0 + pdq(p, 1, q) + PDQ(0, 0, 0))) |> 
+      fabletools::glance()
+  })
+  if (nrow(model_results) > 0) { # Only include non-empty results
+    model_results <- 
+      model_results |> 
+      dplyr::mutate(model = "ARIMA", p = p, d = 1, q = q, .before = sigma2) |>
+      dplyr::mutate(dplyr::across(where(is.numeric), round, 3)) |>
+      dplyr::select(-.model, -ar_roots, -ma_roots)
+      
+    results <- dplyr::bind_rows(results, model_results)
+  }
+}
+
+results <- results |> dplyr::arrange(AIC, p, q)
+
+knitr::kable(head(results, 13))
+```
+
+-   Note that the top twelve models all have AICs are all quite similar. A rule of thumb, outlined in [Burnham & Anderson 2004](http://faculty.washington.edu/skalski/classes/QERM597/papers_xtra/Burnham%20and%20Anderson.pdf) and [expanded on in this stack exchange post](https://stats.stackexchange.com/a/232494) states that if the models with AIC less than about four units more than the smallest AIC observed all have strong support.
+
+-   Since the $(3, 1, 2)$ model has an AIC within 4 units of the top $(2, 1, 5)$ model, but has fewer parameters to estimate, we choose to use the former.
+
+-   Other models that were considered include:
+
+    -   The $(2, 1, 3)$ model, which has only slightly larger AIC and BIC values than the selected model, so would also be a good candidate, particularly if we had good reason to believe the underlying process likely contained more MA components than AR components.
+
+    -   The $(2, 1, 2)$ model, which has a significantly has a higher AIC, but the BIC is fairly similar, and the AR estimated coefficients have much smaller standard errors. The high standard errors in the AR coefficients of the $(3, 1, 2)$ in comparison to the $(2, 1, 2)$ may suggest that there is some correlation/redundancy in the three AR terms. Nevertheless, the coefficients of the selected model are significant (see t-statistics), and the significantly lower AIC gives us reason to prefer the \$(3, 1, 2)\$ model.
+
+```{r}
+#| label: ARIMA(3,1,2)-model
+unknown.ts |> 
+  fabletools::model(fable::ARIMA(x ~ 0 + pdq(2,1,2) + PDQ(0,0,0))) |> 
+  fabletools::report()
+```
+
+```{r}
+#| label: ARIMA(2,1,2)-model
+unknown.ts |> 
+  fabletools::model(fable::ARIMA(x ~ 0 + pdq(3,1,2) + PDQ(0,0,0))) |> 
+  fabletools::report()
+```
+
+## Question (c) - Residual analysis
+
+### Summary
+
+-   Although the simplest model has been chosen the residual component from the model may appear to be white noise, it appears that the residual terms are auto-correlated, not independent.
+
+-   This suggests the selected ARIMA model is not an appropriate model, as only two of the required three properties are observed.
+
+-   This is not unexpected, as alluded to earlier, we suspect there are unusual effects in the data that may result in autocorrelation.
+
+### Exploring the residuals
+
+-   In order to come to the conclusions above, the residual time series and residual series ACF were plotted in @fig-mystery-series-residual-plots below.
+
+```{r}
+#| label: fig-mystery-series-residual-plots
+#| fig-cap: Plots of the residual series
+feasts::gg_tsresiduals(unknown.ts.fit) # plot residuals and ACF
+```
+
+-   The residual series could plausibly be considered white noise. The residual component has a close to zero mean and appears homoscedatic. The turning point test provides no evidence against the residuals being white noise, as
+
+-   However, the ACF shows significant peaks at multiple lags, suggestion that the residual series displays autocorrelation, violating property 2 in Property 2.5 from the lecture notes.
+
+```{r}
+n <- nrow(unknown.ts)
+num_turning_points_upper <- (2 * n / 3) + 1.96 * sqrt(8 * n / 45)
+num_turning_points_lower <- (2 * n / 3) - 1.96 * sqrt(8 * n / 45)
+
+num_turning_points <- 0
+model_residuals <- stats::residuals(unknown.ts.fit)
+for (row in 2:(nrow(model_residuals) - 1)) {
+  prev_x <- model_residuals[[row - 1, ".resid"]]
+  curr_x <- model_residuals[[row, ".resid"]]
+  next_x <- model_residuals[[row + 1, ".resid"]]
+  
+  if ((prev_x < curr_x & curr_x > next_x) | 
+      (prev_x > curr_x & curr_x < next_x)) {
+    num_turning_points <- num_turning_points + 1
+  }
+}
+
+residuals_mean <- base::mean(model_residuals$.resid)
+
+cat(paste("Residual series mean:", round(residuals_mean, 4)))
+cat(paste0("\nNumber of turning points: ", num_turning_points, 
+          ", Upper bound: ", round(num_turning_points_upper),
+          ", Lower bound: ", round(num_turning_points_lower)))
+```
+
+## Question (d) - Spectral analysis
+
+-   A variety of spectral estimations are plotted in @fig-spectral-estimation below.
+
+```{r}
+#| output: false
+#| warning: false
+#| code-fold: true
+
+# Note: We use ggplot to plot in this cell, instead of the built in plot options
+# Get differenced series
+unknown_diff <- difference(unknown.ts$x, lag = 1)
+unknown_diff <- unknown_diff[!is.na(unknown_diff)]
+
+# Raw periodograms 
+# Detrend doesn't make sense to use as it removes a linear trend,
+# but our series doesn't have a linear trend.
+periodogram_raw <- 
+  stats::spec.pgram(unknown.ts$x, detrend = FALSE, log = "no", plot = FALSE)
+
+periodogram_diff <- 
+  stats::spec.pgram(unknown_diff, detrend = FALSE, log = "no", plot = FALSE)
+
+# Smoothed
+smoothed_periodogram_raw <- stats::spec.pgram(
+  unknown.ts$x,
+  detrend = FALSE, 
+  log = "no",
+  kernel("daniell", 1),
+  plot = FALSE
+)
+smoothed_periodogram_diff <- stats::spec.pgram(
+  unknown_diff,
+  detrend = FALSE, 
+  log = "no",
+  kernel("daniell", 1),
+  plot = FALSE
+)
+
+# AR spectral approximation
+ar_spec_raw <- 
+  stats::spec.ar(unknown.ts$x, detrend = FALSE, log = "no", plot = FALSE)
+ar_spec_diff <- 
+  stats::spec.ar(unknown_diff, detrend = FALSE, log = "no", plot = FALSE)
+
+# ARMA spectrum
+ar_coefficients <- c(-1.3710, -1.2472,  -0.2141)
+ma_coefficients <- c(1.1279, 1.0000)
+
+arma_spec <- astsa::arma.spec(ar = ar_coefficients, ma = ma_coefficients)
+```
+
+```{r}
+#| label: fig-spectral-estimation
+#| fig-cap: Spectral estimation plots
+#| fig-subcap: 
+#|   - "Periodogram of raw data"
+#|   - "Periodogram of differenced data"
+#|   - "Smoothed periodogram of raw data"
+#|   - "Smoothed periodogram of differenced data"
+#|   - "AR spectral approximation of raw data"
+#|   - "AR spectral approximation of differenced data"
+#|   - "ARMA spectrum of selected model"
+#| layout-ncol: 2
+#| code-fold: show
+plot_spectrum <- function(spec_list) {
+  plt <- spec_list[1:2] |> 
+    tibble::as_tibble() |> 
+    ggplot2::ggplot(aes(x = freq, y = spec)) + 
+    ggplot2::geom_line()
+  
+  return(plt)
+}
+
+plot_spectrum(periodogram_raw)
+plot_spectrum(periodogram_diff)
+plot_spectrum(smoothed_periodogram_raw)
+plot_spectrum(smoothed_periodogram_diff)
+plot_spectrum(ar_spec_raw)
+plot_spectrum(ar_spec_diff)
+plot_spectrum(arma_spec)
+```
+
+-   Note that the spectral approximations that use the raw data all capture the trend component and a small peak at a frequency of 0.348, whereas the approximations on the differenced series have a much stronger peak at 0.348, and capture a peak at 0.432, which was not captured previously.
+
+```{r}
+#| label: fig-trading-day-peaks
+#| fig-cap: Trading day effects peaks
+#| fig-subcap: 
+#|   - "Trading day peaks on smoothed periodogram"
+#|   - "Trading day peaks on ARMA spectrum"
+#| layout-ncol: 2
+#| layout-nrow: 1
+#| code-fold: true
+plot_spectrum(smoothed_periodogram_diff) + 
+  ggplot2::geom_vline(xintercept = 0.348, colour = "blue") +
+  ggplot2::geom_vline(xintercept = 0.432, colour = "blue")
+
+plot_spectrum(arma_spec) + 
+  ggplot2::geom_vline(xintercept = 0.348, colour = "blue") +
+  ggplot2::geom_vline(xintercept = 0.432, colour = "blue")
+```
+
+-   As discussed in the TSM course, peaks at these frequencies are known to be suggestive of trading day effects. The presence of trading day effects in the series would explain many of the findings from the previous questions.
+
+-   Note that the ARMA spectrum for the fitted ARIMA (3,1,2) captures only one of these peaks. This suggests, that as we'd now expect, the fitted model isn't capturing the trading day effects.
+
+## Question (e) - Fitting a RegARIMA model
+
+-   As discovered in question (d), it is likely our data exhibits trading day effects.
+
+-   As described in the TSM lectures, in general we tend to observe lower trading activity on Mondays, Tuesdays and Wednesdays compared to the remaining days of the week. We make the assumption that the days within each of these two groups see roughly the same amount of activity.
+
+-   To construct a regressor, we use the approach discussed in the lectures. That is, we create six regressors, the first being the difference between the number of Mondays and Sundays in month $t$, the next being the difference between the the number of Tuesdays and Sundays in month $t$ and so on.
+
+-   We construct these regressors below.
+
+```{r}
+trading_day.df <- readr::read_csv("a1_trading_day_dates.csv") |>
+  janitor::clean_names() |> 
+  tidyr::unite(month, c(year, month), sep = " ") |> 
+  dplyr::mutate(month = tsibble::yearmonth(month))
+  
+month_ <- trading_day.df$month
+z1 <- trading_day.df$mon - trading_day.df$sun
+z2 <- trading_day.df$tue - trading_day.df$sun
+z3 <- trading_day.df$wed - trading_day.df$sun
+z4 <- trading_day.df$thur - trading_day.df$sun
+z5 <- trading_day.df$fri - trading_day.df$sun
+z6 <- trading_day.df$sat - trading_day.df$sun
+
+xregs.ts <- tibble::tibble(month_, z1, z2, z3, z4, z5, z6) |> 
+  dplyr::rename(month = month_) |> 
+  dplyr::slice(1:187) |> 
+  tsibble::as_tibble()
+
+unknown_reg.ts <- dplyr::left_join(unknown.ts, xregs.ts, by = "month")
+```
+
+-   Applying these regressors to the selected model, we run into some computational issues when calculating the coefficients.
+
+    ```{r}
+    unknown_reg.ts.fit <- unknown_reg.ts |> 
+      fabletools::model(
+        fable::ARIMA(x ~ 0 + pdq(3,1,2) + PDQ(0,0,0) + z1 + z2 + z3 + z4 + z5 + z6)
+      ) 
+
+    unknown_reg.ts.fit |> fabletools::report()
+
+    cat("\nCoefficient t-statistics:\n")
+    unknown_reg.ts.fit[[1]][[1]]$fit$par$statistic
+    ```
+
+-   We can work around this by changing the fitting method from the default to maximum likelihood.
+
+```{r}
+unknown_reg.ts.fit <- unknown_reg.ts |> 
+  fabletools::model(
+    fable::ARIMA(x ~ 0 + pdq(3,1,2) + PDQ(0,0,0) + z1 + z2 + z3 + z4 + z5 + z6,
+                 method = "ML")
+  ) 
+
+unknown_reg.ts.fit |> fabletools::report()
+
+cat("\nCoefficient t-statistics:\n")
+unknown_reg.ts.fit[[1]][[1]]$fit$par$statistic
+```
+
+-   In any case, we see that this new model has a much lower AIC than the previous model, indicating it is a much better fit. However, while the regressor coefficients are all significant, we see that AR and MA components are no longer significant. This suggests, as we'd expect when including such important additional information, the previous model is no longer appropriate.
+
+-   As we did in question (b), we search through the space of relevant RegARIMA models to select a new model.
+
+```{r}
+#| label: tbl-reg-arima-models
+#| tbl-cap: RegARIMA model outputs
+#| warning: false
+#| code-fold: true
+
+models <- base::expand.grid(p = 0:5, q = 0:5)
+
+results_reg <- tibble::tibble()
+
+for (i in 1:nrow(models)) {
+  p <- models[i, "p"]
+  q <- models[i, "q"]
+  
+  try({
+    model_results <- 
+      unknown_reg.ts |> 
+      fabletools::model(
+        fable::ARIMA(x ~ 0 + pdq(p, 1, q) + PDQ(0, 0, 0) + 
+                         z1 + z2 + z3 + z4 + z5 + z6)
+      ) |> 
+      fabletools::glance()
+  })
+  if (nrow(model_results) > 0) { # Only include non-empty results
+    model_results <- 
+      model_results |> 
+      dplyr::mutate(model = "ARIMA", p = p, d = 1, q = q, .before = sigma2) |>
+      dplyr::mutate(dplyr::across(where(is.numeric), round, 3)) |>
+      dplyr::select(-.model, -ar_roots, -ma_roots)
+      
+    results_reg <- dplyr::bind_rows(results_reg, model_results)
+  }
+}
+
+results_reg <- results_reg |> dplyr::arrange(AIC, p, q)
+
+knitr::kable(head(results_reg, 13))
+```
+
+-   We select the $(2,1,1)$ model, it has the lowest AIC and fewer parameters than any of the other models with similar AICs.
+
+    ```{r}
+    unknown_reg_final.ts.fit <- unknown_reg.ts |> 
+      fabletools::model(
+        fable::ARIMA(x ~ 0 + pdq(2,1,1) + PDQ(0,0,0) + z1 + z2 + z3 + z4 + z5 + z6)
+      ) 
+
+    unknown_reg_final.ts.fit |> fabletools::report()
+
+    cat("\nCoefficient t-statistics:\n")
+    unknown_reg_final.ts.fit[[1]][[1]]$fit$par$statistic
+    ```
+
+## Question (f) - Deriving forecast equations
+
+## Question (g) - Calculating forecasts
+
+```{r}
+trading_day_forecast.df <- trading_day.df[188:189,]
+
+z1_f <- trading_day_forecast.df$mon - trading_day_forecast.df$sun
+z2_f <- trading_day_forecast.df$tue - trading_day_forecast.df$sun
+z3_f <- trading_day_forecast.df$wed - trading_day_forecast.df$sun
+z4_f <- trading_day_forecast.df$thur - trading_day_forecast.df$sun
+z5_f <- trading_day_forecast.df$fri - trading_day_forecast.df$sun
+z6_f <- trading_day_forecast.df$sat - trading_day_forecast.df$sun
+
+unknown_reg_future <- 
+  tsibble::new_data(unknown_reg.ts, n = 2) |> 
+  dplyr::mutate(
+    z1 = z1_f, z2 = z2_f, z3 = z3_f, z4 = z4_f, z5 = z5_f, z6 = z6_f
+  )
+
+unknown_reg_final.ts.fit |> 
+  fabletools::forecast(new_data = unknown_reg_future) |>
+  ggplot2::autoplot(unknown_reg.ts)
+
+
+x <- unknown_reg_final.ts.fit |> 
+  fabletools::forecast(new_data = unknown_reg_future)
+
+x$x
+
+tmp_mdl <- stats::arima(
+  unknown_reg.ts$x,
+  order = c(2,1,1),
+  xreg = cbind(z1, z2, z3, z4, z5, z6)
+)
+```
+
+```{r}
+stats::predict(tmp_mdl, n.ahead = 2, newxreg = cbind(z1_f, z2_f, z3_f, z4_f, z5_f, z6_f))
+```
