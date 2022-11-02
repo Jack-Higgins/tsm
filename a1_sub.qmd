@@ -176,7 +176,7 @@ unknown.ts_plot
 
 ### Summary:
 
-An $ARIMA(3,1,2)$ model was chosen. The model outputs are printed below.
+An `ARIMA(3,1,2)` model was chosen. The model outputs are printed below.
 
 ```{r}
 #| label: selected-ARIMA(3,1,2)-model
@@ -225,9 +225,9 @@ unknown.ts.fit[[1]][[1]]$fit$par$statistic
 
 -   Although we could have jumped straight to visualising the plots to determine the amount of differencing required, it's nice to have multiple methods that all agree with each other.
 
--   Thus, in our ARIMA model, we set $d = 1$.
+-   Thus, in our ARIMA model, we set `d = 1`.
 
--   To start exploring what we might choose for $p$ and \$q\$, we plot the ACF and PACF in @fig-mystery-series-acf-pacf.
+-   To start exploring what we might choose for `p` and `q`, we plot the ACF and PACF in @fig-mystery-series-acf-pacf.
 
 ```{r}
 #| echo: false
@@ -246,8 +246,8 @@ unknown.ts |>
   ggplot2::autoplot()
 ```
 
--   Note that these plots show many significant peaks over an extended time period, so the usual methods of using these plots to give us starting values for $p$ and $q$ isn't so useful here, though it does reveal that there may be both autoregressive and moving average components.
--   However, note that each plot seems to have a pattern that repeats roughly every three peaks. This may indicate that each month in the series is significantly correlated with the value three months ago, so it might make sense to start by investigating a model with $p = q = 3$.
+-   Note that these plots show many significant peaks over an extended time period, so the usual methods of using these plots to give us starting values for `p` and `q` isn't so useful here, though it does reveal that there may be both autoregressive and moving average components.
+-   However, note that each plot seems to have a pattern that repeats roughly every three peaks. This may indicate that each month in the series is significantly correlated with the value three months ago, so it might make sense to start by investigating a model with `p = q = 3`.
 -   We attempt to fit this model using R below, but instead receive a warning with no fit provided:
 
 ```{r}
@@ -260,11 +260,11 @@ unknown.ts |>
 
 -   As mentioned in the TSM lecture notes (pg. 52), this ensures the model selected will be invertible and causal, both of which are desirable. As covered in the lecture notes (pg. 54), if we wish to produce forecast intervals using a model, we require that the model has both these properties.
 
--   Thus, a $(3, 1, 3)$ model is not appropriate.
+-   Thus, a `(3, 1, 3)` model is not appropriate.
 
 #### Model search
 
--   Since the ACF and PACF plots don't provide much further guidance, we instead search through the entire space of ARIMA models with $p < 5$, $d = 1$ and $q < 5$. This involves fitting thirty six different models, four of which suffer similar issues to the $(3, 1, 3)$ model.
+-   Since the ACF and PACF plots don't provide much further guidance, we instead search through the entire space of ARIMA models with `p < 5`, `d = 1` and `q < 5`. This involves fitting thirty six different models, four of which suffer similar issues to the `(3, 1, 3)` model.
 
 -   Although we could search though a much larger number of models by increasing the limits on the orders, given that we don't have any information about the series (and so no real world context by which a larger order model could be justified), we elect to only fit smaller models, to reduce the risks of over-fitting.
 
@@ -307,13 +307,13 @@ knitr::kable(head(results, 13))
 
 -   Note that the top twelve models all have AICs are all quite similar. A rule of thumb, outlined in [Burnham & Anderson 2004](http://faculty.washington.edu/skalski/classes/QERM597/papers_xtra/Burnham%20and%20Anderson.pdf) and [expanded on in this stack exchange post](https://stats.stackexchange.com/a/232494) states that if the models with AIC less than about four units more than the smallest AIC observed all have strong support.
 
--   Since the $(3, 1, 2)$ model has an AIC within 4 units of the top $(2, 1, 5)$ model, but has fewer parameters to estimate, we choose to use the former.
+-   Since the `(3, 1, 2)` model has an AIC within 4 units of the top `(2, 1, 5)` model, but has fewer parameters to estimate, we choose to use the former.
 
 -   Other models that were considered include:
 
-    -   The $(2, 1, 3)$ model, which has only slightly larger AIC and BIC values than the selected model, so would also be a good candidate, particularly if we had good reason to believe the underlying process likely contained more MA components than AR components.
+    -   The `(2, 1, 3)` model, which has only slightly larger AIC and BIC values than the selected model, so would also be a good candidate, particularly if we had good reason to believe the underlying process likely contained more MA components than AR components.
 
-    -   The $(2, 1, 2)$ model, which has a significantly has a higher AIC, but the BIC is fairly similar, and the AR estimated coefficients have much smaller standard errors. The high standard errors in the AR coefficients of the $(3, 1, 2)$ in comparison to the $(2, 1, 2)$ may suggest that there is some correlation/redundancy in the three AR terms. Nevertheless, the coefficients of the selected model are significant (see t-statistics), and the significantly lower AIC gives us reason to prefer the \$(3, 1, 2)\$ model.
+    -   The `(2, 1, 2)` model, which has a significantly has a higher AIC, but the BIC is fairly similar, and the AR estimated coefficients have much smaller standard errors. The high standard errors in the AR coefficients of the `(3, 1, 2)` in comparison to the `(2, 1, 2)` may suggest that there is some correlation/redundancy in the three AR terms. Nevertheless, the coefficients of the selected model are significant (see t-statistics), and the significantly lower AIC gives us reason to prefer the `(3, 1, 2)` model.
 
 ```{r}
 #| label: ARIMA(3,1,2)-model

@@ -2754,7 +2754,7 @@ Object.defineProperty(e,"__esModule",{value:!0}),e.mhchemParser=void 0;var r=fun
 <h2 class="anchored" data-anchor-id="question-b---fitting-an-arima-model">Question (b) - Fitting an ARIMA model</h2>
 <section id="summary" class="level3">
 <h3 class="anchored" data-anchor-id="summary">Summary:</h3>
-<p>An <span class="math inline">\(ARIMA(3,1,2)\)</span> model was chosen. The model outputs are printed below.</p>
+<p>An <code>ARIMA(3,1,2)</code> model was chosen. The model outputs are printed below.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>unknown.ts.fit <span class="ot">&lt;-</span> unknown.ts <span class="sc">|&gt;</span> </span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  fabletools<span class="sc">::</span><span class="fu">model</span>(fable<span class="sc">::</span><span class="fu">ARIMA</span>(x <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> <span class="fu">pdq</span>(<span class="dv">3</span>,<span class="dv">1</span>,<span class="dv">2</span>) <span class="sc">+</span> <span class="fu">PDQ</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>))) </span>
@@ -2812,8 +2812,8 @@ Coefficient t-statistics:</code></pre>
 </div>
 </div></li>
 <li><p>Although we could have jumped straight to visualising the plots to determine the amount of differencing required, it’s nice to have multiple methods that all agree with each other.</p></li>
-<li><p>Thus, in our ARIMA model, we set <span class="math inline">\(d = 1\)</span>.</p></li>
-<li><p>To start exploring what we might choose for <span class="math inline">\(p\)</span> and $q$, we plot the ACF and PACF in <a href="#fig-mystery-series-acf-pacf">Figure 5</a>.</p></li>
+<li><p>Thus, in our ARIMA model, we set <code>d = 1</code>.</p></li>
+<li><p>To start exploring what we might choose for <code>p</code> and <code>q</code>, we plot the ACF and PACF in <a href="#fig-mystery-series-acf-pacf">Figure 5</a>.</p></li>
 </ul>
 <div id="fig-mystery-series-acf-pacf" class="cell quarto-layout-panel">
 <figure class="figure">
@@ -2839,8 +2839,8 @@ Coefficient t-statistics:</code></pre>
 </figure>
 </div>
 <ul>
-<li>Note that these plots show many significant peaks over an extended time period, so the usual methods of using these plots to give us starting values for <span class="math inline">\(p\)</span> and <span class="math inline">\(q\)</span> isn’t so useful here, though it does reveal that there may be both autoregressive and moving average components.</li>
-<li>However, note that each plot seems to have a pattern that repeats roughly every three peaks. This may indicate that each month in the series is significantly correlated with the value three months ago, so it might make sense to start by investigating a model with <span class="math inline">\(p = q = 3\)</span>.</li>
+<li>Note that these plots show many significant peaks over an extended time period, so the usual methods of using these plots to give us starting values for <code>p</code> and <code>q</code> isn’t so useful here, though it does reveal that there may be both autoregressive and moving average components.</li>
+<li>However, note that each plot seems to have a pattern that repeats roughly every three peaks. This may indicate that each month in the series is significantly correlated with the value three months ago, so it might make sense to start by investigating a model with <code>p = q = 3</code>.</li>
 <li>We attempt to fit this model using R below, but instead receive a warning with no fit provided:</li>
 </ul>
 <div class="cell">
@@ -2860,13 +2860,13 @@ NULL model</code></pre>
 <ul>
 <li><p>This warning is received because the autoregressive coefficients estimated are non-stationary, as described by <a href="https://stackoverflow.com/a/7236919">Rob Hyndman here</a>. Specifically, there is <a href="https://otexts.com/fpp3/arima-r.html#plotting-the-characteristic-roots">at least one root of the AR polynomial that lies outside the unit circle</a>.</p></li>
 <li><p>As mentioned in the TSM lecture notes (pg. 52), this ensures the model selected will be invertible and causal, both of which are desirable. As covered in the lecture notes (pg. 54), if we wish to produce forecast intervals using a model, we require that the model has both these properties.</p></li>
-<li><p>Thus, a <span class="math inline">\((3, 1, 3)\)</span> model is not appropriate.</p></li>
+<li><p>Thus, a <code>(3, 1, 3)</code> model is not appropriate.</p></li>
 </ul>
 </section>
 <section id="model-search" class="level4">
 <h4 class="anchored" data-anchor-id="model-search">Model search</h4>
 <ul>
-<li><p>Since the ACF and PACF plots don’t provide much further guidance, we instead search through the entire space of ARIMA models with <span class="math inline">\(p &lt; 5\)</span>, <span class="math inline">\(d = 1\)</span> and <span class="math inline">\(q &lt; 5\)</span>. This involves fitting thirty six different models, four of which suffer similar issues to the <span class="math inline">\((3, 1, 3)\)</span> model.</p></li>
+<li><p>Since the ACF and PACF plots don’t provide much further guidance, we instead search through the entire space of ARIMA models with <code>p &lt; 5</code>, <code>d = 1</code> and <code>q &lt; 5</code>. This involves fitting thirty six different models, four of which suffer similar issues to the <code>(3, 1, 3)</code> model.</p></li>
 <li><p>Although we could search though a much larger number of models by increasing the limits on the orders, given that we don’t have any information about the series (and so no real world context by which a larger order model could be justified), we elect to only fit smaller models, to reduce the risks of over-fitting.</p></li>
 <li><p>We search the model space in the code block below. <a href="#tbl-arima-models">Table 1</a> shows the top thirteen models by AIC.</p></li>
 </ul>
@@ -3070,11 +3070,11 @@ NULL model</code></pre>
 </div>
 <ul>
 <li><p>Note that the top twelve models all have AICs are all quite similar. A rule of thumb, outlined in <a href="http://faculty.washington.edu/skalski/classes/QERM597/papers_xtra/Burnham%20and%20Anderson.pdf">Burnham &amp; Anderson 2004</a> and <a href="https://stats.stackexchange.com/a/232494">expanded on in this stack exchange post</a> states that if the models with AIC less than about four units more than the smallest AIC observed all have strong support.</p></li>
-<li><p>Since the <span class="math inline">\((3, 1, 2)\)</span> model has an AIC within 4 units of the top <span class="math inline">\((2, 1, 5)\)</span> model, but has fewer parameters to estimate, we choose to use the former.</p></li>
+<li><p>Since the <code>(3, 1, 2)</code> model has an AIC within 4 units of the top <code>(2, 1, 5)</code> model, but has fewer parameters to estimate, we choose to use the former.</p></li>
 <li><p>Other models that were considered include:</p>
 <ul>
-<li><p>The <span class="math inline">\((2, 1, 3)\)</span> model, which has only slightly larger AIC and BIC values than the selected model, so would also be a good candidate, particularly if we had good reason to believe the underlying process likely contained more MA components than AR components.</p></li>
-<li><p>The <span class="math inline">\((2, 1, 2)\)</span> model, which has a significantly has a higher AIC, but the BIC is fairly similar, and the AR estimated coefficients have much smaller standard errors. The high standard errors in the AR coefficients of the <span class="math inline">\((3, 1, 2)\)</span> in comparison to the <span class="math inline">\((2, 1, 2)\)</span> may suggest that there is some correlation/redundancy in the three AR terms. Nevertheless, the coefficients of the selected model are significant (see t-statistics), and the significantly lower AIC gives us reason to prefer the $(3, 1, 2)$ model.</p></li>
+<li><p>The <code>(2, 1, 3)</code> model, which has only slightly larger AIC and BIC values than the selected model, so would also be a good candidate, particularly if we had good reason to believe the underlying process likely contained more MA components than AR components.</p></li>
+<li><p>The <code>(2, 1, 2)</code> model, which has a significantly has a higher AIC, but the BIC is fairly similar, and the AR estimated coefficients have much smaller standard errors. The high standard errors in the AR coefficients of the <code>(3, 1, 2)</code> in comparison to the <code>(2, 1, 2)</code> may suggest that there is some correlation/redundancy in the three AR terms. Nevertheless, the coefficients of the selected model are significant (see t-statistics), and the significantly lower AIC gives us reason to prefer the <code>(3, 1, 2)</code> model.</p></li>
 </ul></li>
 </ul>
 <div class="cell">
@@ -3719,6 +3719,9 @@ Coefficient t-statistics:</code></pre>
 </section>
 <section id="question-f---deriving-forecast-equations" class="level2">
 <h2 class="anchored" data-anchor-id="question-f---deriving-forecast-equations">Question (f) - Deriving forecast equations</h2>
+<ul>
+<li>See image attached to submission.</li>
+</ul>
 </section>
 <section id="question-g---calculating-forecasts" class="level2">
 <h2 class="anchored" data-anchor-id="question-g---calculating-forecasts">Question (g) - Calculating forecasts</h2>
