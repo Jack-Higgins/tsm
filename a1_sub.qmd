@@ -1,7 +1,7 @@
 ---
 title: "TSM Assignment 1"
 author: "Jack Higgins"
-format: 
+format:
   html:
     embed-resources: true
     self-contained-math: true
@@ -606,7 +606,11 @@ knitr::kable(head(results_reg, 13))
 
 ## Question (f) - Deriving forecast equations
 
+-   See image attached to submission.
+
 ## Question (g) - Calculating forecasts
+
+-   We calculate forecasts and their associated 95% confidence intervals below.
 
 ```{r}
 trading_day_forecast.df <- trading_day.df[188:189,]
@@ -618,29 +622,41 @@ z4_f <- trading_day_forecast.df$thur - trading_day_forecast.df$sun
 z5_f <- trading_day_forecast.df$fri - trading_day_forecast.df$sun
 z6_f <- trading_day_forecast.df$sat - trading_day_forecast.df$sun
 
+xreg <- base::cbind(z1, z2, z3, z4, z5, z6)[1:187,]
+xreg_new <- base::cbind(z1_f, z2_f, z3_f, z4_f, z5_f, z6_f)
+
+stats.fit <- stats::arima(unknown_reg.ts$x, order = c(2,1,1), xreg = xreg) 
+stats.predict <- stats::predict(stats.fit, n.ahead = 2, newxreg = xreg_new)
+
+forecast_point <- stats.predict$pred[1:2]
+forecast_se <- stats.predict$se[1:2]
+forecast_interval_upper <- forecast_point + 1.96 * forecast_se 
+forecast_interval_lower <- forecast_point - 1.96 * forecast_se 
+
+```
+
+-   For August 2018, we get a point estimate of `r round(forecast_point[1], 3)`, with an associated 95% forecast interval of \[`r round(forecast_interval_lower[1], 3)`, `r round(forecast_interval_upper[1], 3)`\].
+-   For September 2018, we get a point estimate of `r round(forecast_point[2], 3)`, with an associated 95% forecast interval of \[`r round(forecast_interval_lower[2], 3)`, `r round(forecast_interval_upper[2], 3)`\].
+-   The forecast is plotted in @fig-forecast below.
+
+```{r}
+#| label: fig-forecast
+#| fig-cap: Two month ahead forecast
+#| code-fold: true
 unknown_reg_future <- 
   tsibble::new_data(unknown_reg.ts, n = 2) |> 
   dplyr::mutate(
     z1 = z1_f, z2 = z2_f, z3 = z3_f, z4 = z4_f, z5 = z5_f, z6 = z6_f
   )
 
+first_period <- trading_day.df[[160, "month"]]
+last_period <- trading_day.df[[nrow(trading_day.df), "month"]]
+
 unknown_reg_final.ts.fit |> 
   fabletools::forecast(new_data = unknown_reg_future) |>
-  ggplot2::autoplot(unknown_reg.ts)
-
-
-x <- unknown_reg_final.ts.fit |> 
-  fabletools::forecast(new_data = unknown_reg_future)
-
-x$x
-
-# tmp_mdl <- stats::arima(
-#   unknown_reg.ts$x,
-#   order = c(2,1,1),
-#   xreg = cbind(z1, z2, z3, z4, z5, z6)
-# )
-```
-
-```{r}
-# stats::predict(tmp_mdl, n.ahead = 2, newxreg = cbind(z1_f, z2_f, z3_f, z4_f, z5_f, z6_f))
+  ggplot2::autoplot(unknown_reg.ts) +
+  ggplot2::coord_cartesian(
+    xlim = c(first_period, last_period),
+    ylim = c(30, 40)
+  )
 ```
